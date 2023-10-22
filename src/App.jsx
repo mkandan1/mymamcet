@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, lazy } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import './App.css';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { DashboardPage } from './pages/DashboardPage'
+
+// Allow the user to access Dashboard only if authenticated
+const PrivateRoute = ({ element, isAuthenticated }) => {
+  const url = window.location.href;
+  if (isAuthenticated) {
+    return element;
+  } else {
+    return <Navigate to={`/v1/auth/login?redirect_url=${url}`} />;
+  }
+};
+
+// Redirect to the Dashboard if the user is authenticated
+const PublicRoute = ({ element, isAuthenticated, restricted }) => {
+  if (isAuthenticated && restricted) {
+    return <Navigate to="/dashboard" />;
+  } else {
+    return element;
+  }
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isAuthenticated, setAuthenticated] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route
+          path="/v1/auth/login"
+          element={<PublicRoute restricted={false} isAuthenticated={isAuthenticated} element={<LoginPage />} />}
+        />
+        <Route
+          path="/dashboard"
+          element={<PrivateRoute isAuthenticated={isAuthenticated} element={<DashboardPage />} />}
+        />
+        <Route path="/"  element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<HomePage />} />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
