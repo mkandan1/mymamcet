@@ -1,1 +1,4 @@
-
+#active {
+    background-color: rgb(207, 235, 252, 0.20);
+    transition: background-color 2s ease-in-out;
+}

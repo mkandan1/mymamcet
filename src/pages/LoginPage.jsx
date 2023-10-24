@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Google from '../assets/uploads/search.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleXmark, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '../FirebaseConfig';
 
 export const LoginPage = () => {
   // Error indicators value
   const [hasError, setHasError] = useState({
     email: false,
-    password: false
+    password: false,
+    invalid_mail_or_password: false
   });
   const [hasEntryStarted, setHasEntryStarted] = useState({
     email: false,
@@ -18,6 +21,7 @@ export const LoginPage = () => {
   // Input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const auth = getAuth(app);
 
   // Handle user email input
   const handleEmailChange = (e) => {
@@ -59,7 +63,20 @@ export const LoginPage = () => {
     // Check if email and password are valid
     if (!hasError.email && !hasError.password) {
       // Perform login or other actions here
-      console.log('Email and password are valid. Proceed with login.');
+      signInWithEmailAndPassword(auth, email, password)
+      .then((userCrendential)=>{
+        console.log("Authentication successful");
+        window.location.href = '/dashboard'
+      })
+      .catch((err)=>{
+        console.error("Error occurred while authenticating!");
+        if(err.message === 'auth/invalid-login-credentials'){
+          setHasError((prev)=>({
+            ...prev,
+            invalid_mail_or_password: true
+          }))
+        }
+      })
     } else {
       console.log('Email or password is invalid.');
     }
@@ -88,7 +105,7 @@ export const LoginPage = () => {
               <p className='font-inter text-sm sm:text-md text-gray-400 tracking-tight'>Please enter the below details to proceed login</p>
             </div>
             {/* Display error */}
-            <div>
+            <div className={`w-full h-10 bg-red-300 border-red-500 mt-5 transition-all duration-150 ${hasError.invalid_mail_or_password ? '' : 'hidden'}`}>
 
             </div>
 
@@ -109,7 +126,7 @@ export const LoginPage = () => {
                   className={`${hasEntryStarted.email ? (hasError.email ? 'bg-red-600' : 'bg-green-600') : 'border-gray-300'
                     } w-10 absolute top-2 right-0 h-10 sm:h-12 flex items-center justify-center rounded-r-md`}
                 >
-                  <FontAwesomeIcon className='text-white' icon={hasEntryStarted.email ? (hasError.email ? faCircleXmark : faCircleCheck) : ''} />
+                  <FontAwesomeIcon className={hasEntryStarted.email ? 'text-white' : 'text-gray-400'} icon={hasEntryStarted.email ? (hasError.email ? faCircleXmark : faCircleCheck) : faEnvelope} />
                 </div>
 
               </div>
@@ -131,7 +148,7 @@ export const LoginPage = () => {
                   className={`${hasEntryStarted.password ? (hasError.password ? 'bg-red-600' : 'bg-green-600') : 'border-gray-300'
                     } w-10  absolute top-2 right-0 h-10 sm:h-12 flex items-center justify-center rounded-r-md`}
                 >
-                  <FontAwesomeIcon className='text-white' icon={hasEntryStarted.password ? (hasError.password ? faCircleXmark : faCircleCheck) : ''} />
+                  <FontAwesomeIcon className={hasEntryStarted.password ? 'text-white' : 'text-gray-400'} icon={hasEntryStarted.password ? (hasError.password ? faCircleXmark : faCircleCheck) : faLock} />
                 </div>
               </div>
             </div>
