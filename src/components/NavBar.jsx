@@ -45,7 +45,6 @@ export const NavBar = () => {
   const [screenWidth, setScreenWidth] = useState(getScreenWidth());
 
   const path = useLocation().pathname;
-  console.log(path);
 
   useLayoutEffect(() => {
     if (screenWidth.width > 768 && !toggle) {

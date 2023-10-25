@@ -11,7 +11,7 @@ export const DashboardPage = () => {
       </div>
       
 
-        <div className='mt-20 md:ml-72 absolute top-0 md:top-5 left-0 lg:left-5 z-0'>
+        <div className='mt-20 md:ml-72 absolute top-0 md:top-5 left-5 lg:left-5 z-0'>
           <h1 className='font-inter font-semibold text-xl tracking-tighter text-slate-700'>Dashboard</h1>
         </div>
     </div>

@@ -1,5 +1,5 @@
 const initialState = {
-    status: true,
+    status: false,
 }
 
 const toggleMenuReducer = (state = initialState, action) => {

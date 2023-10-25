@@ -2,7 +2,7 @@ import React from 'react'
 import { NavBar } from '../components/NavBar'
 import { Header } from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleRight, faEye } from '@fortawesome/free-solid-svg-icons'
+import { faAngleDown, faAngleRight, faEye } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 export const ExamManagementPage = () => {
@@ -13,7 +13,7 @@ export const ExamManagementPage = () => {
         <Header />
       </div>
 
-      <div className='mt-20 md:ml-72 absolute top-0 md:top-5 left-0 lg:left-5 z-0'>
+      <div className='mt-10 lg:mt-20 md:ml-72 absolute top-0 md:top-5 left-0 lg:left-5 z-0'>
         <div>
           <h1 className='font-inter font-semibold text-xl tracking-tighter text-slate-700'>Exam Management</h1>
           <p className='text-slate-400 font-inter text-sm mt-3'>Management <FontAwesomeIcon icon={faAngleRight} className='text-xs' /> <Link to={'/management/exam'} className='text-[#4285F4]'>Exam Management</Link></p>
@@ -33,20 +33,7 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
@@ -61,20 +48,7 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
@@ -92,20 +66,7 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
@@ -120,20 +81,7 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
@@ -150,20 +98,7 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
@@ -178,27 +113,14 @@ export const ExamManagementPage = () => {
                     <option>Option 3</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-[#9AB4C3]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                   </div>
                 </div>
               </div>
             </div>
             <div className='w-52 ml-2 mt-5 mr-2 flex items-end'>
               <div className="relative">
-                <button className='bg-[#4285F4] font-inter text-xs text-white py-3 pl-4 pr-5 rounded-sm'><FontAwesomeIcon icon={faEye} className='mr-2'/>Show Result</button>
+                <button className='bg-[#4285F4] font-inter text-xs text-white py-3 pl-4 pr-5 rounded-sm'><FontAwesomeIcon icon={faEye} className='mr-2' />Show Result</button>
               </div>
             </div>
           </div>

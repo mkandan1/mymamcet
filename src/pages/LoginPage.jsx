@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import Google from '../assets/uploads/search.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { app } from '../FirebaseConfig';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { app, auth } from '../FirebaseConfig';
+import { useLayoutEffect } from 'react';
 
 export const LoginPage = () => {
   // Error indicators value
@@ -21,7 +22,16 @@ export const LoginPage = () => {
   // Input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const auth = getAuth(app);
+
+  useLayoutEffect(() => {
+    console.log('Validating auth user');
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        console.log('Redirecting to home page');
+        return window.location.href = '/';
+      }
+    })
+  }, [])
 
   // Handle user email input
   const handleEmailChange = (e) => {
@@ -64,19 +74,19 @@ export const LoginPage = () => {
     if (!hasError.email && !hasError.password) {
       // Perform login or other actions here
       signInWithEmailAndPassword(auth, email, password)
-      .then((userCrendential)=>{
-        console.log("Authentication successful");
-        window.location.href = '/dashboard'
-      })
-      .catch((err)=>{
-        console.error("Error occurred while authenticating!");
-        if(err.message === 'auth/invalid-login-credentials'){
-          setHasError((prev)=>({
-            ...prev,
-            invalid_mail_or_password: true
-          }))
-        }
-      })
+        .then((userCrendential) => {
+          console.log("Authentication successful");
+          window.location.href = '/'
+        })
+        .catch((err) => {
+          console.error("Error occurred while authenticating!");
+          if (err.message === 'auth/invalid-login-credentials') {
+            setHasError((prev) => ({
+              ...prev,
+              invalid_mail_or_password: true
+            }))
+          }
+        })
     } else {
       console.log('Email or password is invalid.');
     }
