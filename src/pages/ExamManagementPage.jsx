@@ -2,7 +2,7 @@ import React from 'react'
 import { NavBar } from '../components/NavBar'
 import { Header } from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faAngleRight, faEye } from '@fortawesome/free-solid-svg-icons'
+import { faAngleDown, faAngleRight, faEye, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 export const ExamManagementPage = () => {
@@ -14,9 +14,14 @@ export const ExamManagementPage = () => {
       </div>
 
       <div className='mt-10 lg:mt-20 md:ml-72 absolute top-0 md:top-5 left-0 lg:left-5 z-0'>
-        <div>
-          <h1 className='font-inter font-semibold text-xl tracking-tighter text-slate-700'>Exam Management</h1>
-          <p className='text-slate-400 font-inter text-sm mt-3'>Management <FontAwesomeIcon icon={faAngleRight} className='text-xs' /> <Link to={'/management/exam'} className='text-[#4285F4]'>Exam Management</Link></p>
+        <div className='flex justify-between'>
+          <div>
+            <h1 className='font-inter font-semibold text-xl tracking-tighter text-slate-700'>Exam Management</h1>
+            <p className='text-slate-400 font-inter text-sm mt-3'>Management <FontAwesomeIcon icon={faAngleRight} className='text-xs' /> <Link to={'/management/exam'} className='text-[#4285F4]'>Exam Management</Link></p>
+          </div>
+          <div>
+            <a href='/AddStudentPage'><button className='bg-[#4285F4] font-inter text-xs text-white py-3 pl-4 pr-5 rounded-sm mr-3'><FontAwesomeIcon icon={faPlus} /> Add Student</button></a>
+          </div>
         </div>
 
         <div className='mt-20 w-full'>

@@ -9,6 +9,7 @@ import { app } from './FirebaseConfig'
 import { useSelector, useDispatch } from 'react-redux'
 import { LOGIN, LOGOUT, REMOVE_LOADING } from './actionTypes/actionTypes';
 import { ExamManagementPage } from './pages/ExamManagementPage';
+import { AddStudentPage } from './pages/AddStudentsPage';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -78,6 +79,10 @@ function App() {
         <Route
           path="/management/exam"
           element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<ExamManagementPage />} />}
+        />
+        <Route
+          path="/AddStudent"
+          element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<AddStudentPage/>} />}
         />
       </Routes>
     </Router>
