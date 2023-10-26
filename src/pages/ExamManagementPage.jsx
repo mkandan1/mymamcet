@@ -125,7 +125,45 @@ export const ExamManagementPage = () => {
             </div>
           </div>
         </div>
+        <TableOfResult/>
       </div>
     </div>
+  )
+}
+
+const TableOfResult = () =>{
+  return(
+    <>
+    <div className='m-5'>
+      <table className=' table-auto overflow-scroll bg-white rounded'>
+        <thead className='bg-blue-500 rounded'>
+        <tr className='text-white '>
+          <th className='font-normal font-inter p-3 text-sm'>Register Number</th>
+          <th className='font-normal font-inter p-3 text-sm'>Name</th>
+          <th className='font-normal font-inter p-3 text-sm'>Catogory</th>
+          <th className='font-normal font-inter p-3 text-sm'>Subject 1</th>
+          <th className='font-normal font-inter p-3 text-sm'>Subject 2</th>
+          <th className='font-normal font-inter p-3 text-sm'>Subject 3</th>
+          <th className='font-normal font-inter p-3 text-sm'>Subject 4</th>
+          <th className='font-normal font-inter p-3 text-sm'>Subject N</th>
+          <th className='font-normal font-inter p-3 text-sm'>Result</th>
+          <th className='font-normal font-inter p-3 text-sm'>Action</th>
+        </tr>
+        </thead>
+        <tbody className='text-center'>
+          <td>812021205013</td>
+          <td>Elamaran E</td>
+          <td>B+</td>
+          <td>90</td>
+          <td>25</td>
+          <td>100</td>
+          <td>10</td>
+          <td>20</td>
+          <td>C</td>
+          <td><a className='text-blue-500 underline'>Update</a></td>
+        </tbody>
+      </table>
+    </div>
+    </>
   )
 }
