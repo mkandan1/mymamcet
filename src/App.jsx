@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { LOGIN, LOGOUT, REMOVE_LOADING } from './actionTypes/actionTypes';
 import { ExamManagementPage } from './pages/ExamManagementPage';
 import { AddStudentPage } from './pages/AddStudentsPage';
+import { NewBatch } from './pages/BatchAddPage';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -24,7 +25,7 @@ const PrivateRoute = ({ element, isAuthenticated }) => {
 // Redirect to the Dashboard if the user is authenticated
 const PublicRoute = ({ element, isAuthenticated, restricted }) => {
   if (isAuthenticated && restricted) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/" />;
   } else {
     return element;
   }
@@ -81,8 +82,12 @@ function App() {
           element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<ExamManagementPage />} />}
         />
         <Route
-          path="/AddStudent"
+          path="/management/exam/students/add"
           element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<AddStudentPage/>} />}
+        />
+        <Route
+          path="/management/batch/add"
+          element={<PrivateRoute restricted={true} isAuthenticated={isAuthenticated} element={<NewBatch/>} />}
         />
       </Routes>
     </Router>

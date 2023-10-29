@@ -1,4 +1,44 @@
+body {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
 #active {
     background-color: rgb(207, 235, 252, 0.20);
     transition: background-color 2s ease-in-out;
 }
+
+.overflow-x-auto {
+    max-height: 160px; /* Adjust the maximum height as needed */
+    overflow-x: auto;
+    /* Add other styling as needed */
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    width: 6px;
+    height: 5px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: #4285F4; /* Thumb color */
+    border-radius: 5px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #EFF2F4; /* Track color */
+  }
+  
+  /* Style Firefox scrollbars */
+  .overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #4285F4 #EFF2F4; /* Thumb color Track color */
+  }
+  
+  /* Style Microsoft Edge (based on Webkit) scrollbars */
+  .overflow-x-auto::-webkit-scrollbar-thumb:horizontal {
+    background-color: #4285F4;
+  }
+  
+  
+  
+  
