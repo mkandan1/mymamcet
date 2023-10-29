@@ -99,7 +99,7 @@ export const ExamManagementPage = () => {
                   </div>
                   {
                     admin ? (
-                      <FontAwesomeIcon icon={faAdd} className='text-[#9AB4C3] text-xs bg-white p-1 rounded-full border shadow-md shadow-[#e0e8ec] cursor-pointer ml-2' onClick={openAddBatchDialog} />
+                      <FontAwesomeIcon icon={faAdd} className='text-[#9AB4C3] text-xs bg-white p-1 rounded-full border shadow-md shadow-[#e0e8ec] cursor-pointer ml-2' />
                     ) : <></>
                   }
                 </div>
