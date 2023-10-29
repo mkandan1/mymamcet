@@ -40,7 +40,7 @@ export const Header = () => {
         })
     })
     return (
-        <div className='w-screen border h-16 bg-blue-500 md:bg-white fixed z-10 top-0'>
+        <div className='w-screen border h-16 bg-blue-500 md:bg-white fixed top-0'>
             <header className='flex justify-between w-full h-full items-center pl-5 pr-5'>
                 <FontAwesomeIcon icon={faBars} className='text-white md:hidden cursor-pointer' onClick={handleToggleMenu} />
 

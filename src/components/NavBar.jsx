@@ -11,7 +11,8 @@ import {
   faBell,
   faBars,
   faRightFromBracket,
-  faPeopleGroup
+  faPeopleGroup,
+  faUserAlt
 } from '@fortawesome/free-solid-svg-icons';
 import user from '/user.png'
 import { useSelector, useDispatch } from 'react-redux';
@@ -148,7 +149,18 @@ export const NavBar = () => {
                   ) : <></>
                 }
               </li>
-              
+
+            </Link>
+          </nav>
+        </div>
+        <div className="pt-10">
+          <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">User Management</h3>
+          <nav className="text-gray-300 mt-5 grid gap-y-1">
+            <Link to="/management/users">
+              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/users') ? 'active' : ''}>
+                <FontAwesomeIcon icon={faUserAlt} className="mr-2" />Manage Users
+                {/* <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} onClick={() => handleSubPathShowing('exam_management')} /> */}
+              </li>
             </Link>
           </nav>
         </div>

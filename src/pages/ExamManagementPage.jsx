@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faAngleDown, faAngleRight, faEye, faMagnifyingGlass, faPlus, faSort, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
+import { Table } from '../components/Table'
 
 export const ExamManagementPage = () => {
   const [admin, setAdmin] = useState(true);
@@ -59,6 +60,7 @@ export const ExamManagementPage = () => {
     if (isAllSelected) {
       errorTag.style.display = 'none';
 
+    setTimeout(()=>{
       fetch(`${import.meta.env.VITE_API_URL}/fetch/exam/data`, {
         method: 'POST',
         headers: {
@@ -75,7 +77,9 @@ export const ExamManagementPage = () => {
           }
           setIsNoResult(false);
           setSearchResult(data.result)
-          setTableHeader(data.header)
+          // setTableHeader(data.header)
+          let tableHeader = ['Register Number', 'Name',...data.header];
+          setTableHeader(tableHeader)
           setIsSearchCompleted(true)
           setShowLoading(false)
         })
@@ -83,6 +87,7 @@ export const ExamManagementPage = () => {
           console.log(err);
           setShowLoading(false)
         })
+    }, 12000)
     }
     else {
       errorTag.style.display = "block";
@@ -229,34 +234,9 @@ export const ExamManagementPage = () => {
             {isSearchCompleted && !isNoResult ? (
 
               <div className='max-w-full ml-2 mt-10 overflow-x-auto pr-5'>
-                <table className='w-full table-auto overflow-scroll '>
-                  <thead>
-                    <tr className='text-slate-500 border-2'>
-                      <th className='font-normal font-inter py-4 px-3 text-sm text-start'>Register Number <FontAwesomeIcon className='font-regular cursor-pointer text-xs' icon={faSort} /></th>
-                      <th className='font-normal font-inter py-4 px-3 text-sm text-start'>Name <FontAwesomeIcon className='font-regular cursor-pointer text-xs' icon={faSort} /></th>
-                      {tableHeader.map((item, i) => (
-                        <th className='font-normal font-inter py-4 px-3 text-sm text-start' key={i}>{item} <FontAwesomeIcon className='font-regular cursor-pointer text-xs' icon={faSort} /></th>
-                      ))}
-                      <th className='font-normal font-inter py-4 px-3 text-sm text-start'>Action <FontAwesomeIcon className='font-regular cursor-pointer text-xs' icon={faSort} /></th>
-                    </tr>
-                  </thead>
-                  <tbody className='text-center bg-white'>
-
-                    {searchResult.map((item, i) => (
-                      <tr className='font-inter border' key={i}>
-                        <td className='text-gray-400 px-3 py-3 text-sm text-start'>{item.roll_no}</td>
-                        <td className='text-gray-400 px-3 py-3 text-sm text-start'>{item.name}</td>
-                        {
-                          tableHeader.map((subject, i) => (
-                            <td className='text-gray-400 px-3 py-3 text-sm text-start' key={i}>{item[subject]}</td>
-                          ))
-                        }
-                        <td className='text-gray-400 px-3 py-3 text-sm text-start'><a className='text-blue-500 cursor-pointer'>Update</a></td>
-                      </tr>
-                    ))}
-
-                  </tbody>
-                </table>
+                <Table header={tableHeader} data={searchResult} enableRowAction={true} renderRowAction={({row})=> (
+                  <Link className='text-blue-500 text-xs' to={`student/${row['Register Number']}`}>Update</Link>
+                )}/>
               </div>
             ) : <></>}
           </div>
@@ -270,9 +250,3 @@ export const ExamManagementPage = () => {
   )
 }
 
-const TableOfResult = (props) => {
-  return (
-    <>
-    </>
-  )
-}

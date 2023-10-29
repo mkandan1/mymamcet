@@ -14,6 +14,8 @@ import { NewBatch } from './pages/BatchAddPage';
 import { Header } from './components/Header';
 import { NavBar } from './components/NavBar';
 import { Page404 } from './pages/404';
+import { MangeUsersPage } from './pages/User Management/MangeUsersPage';
+import { AddUserPage } from './pages/User Management/AddUserPage';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -72,7 +74,6 @@ function App() {
       {isAuthenticated
         ? (
           <>
-
             <Header />
             <NavBar />
             <Routes>
@@ -98,6 +99,14 @@ function App() {
               <Route
                 path="/management/batch/add"
                 element={<NewBatch/>}
+              />
+              <Route
+                path="/management/users"
+                element={<MangeUsersPage/>}
+              />
+              <Route
+                path="/management/users/add"
+                element={<AddUserPage/>}
               />
               <Route
                 path="*"
