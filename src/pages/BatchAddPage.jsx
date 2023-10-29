@@ -121,11 +121,6 @@ export const NewBatch = () => {
     return (
         <>
             <div className='min-h-screen w-screen bg-[#EFF2F4]'>
-                <div className='flex'>
-                    <NavBar />
-                    <Header />
-                </div>
-
                 <div className='mt-20 md:ml-96 px-2 pb-20'>
                     <div className='flex justify-between'>
                         <div>

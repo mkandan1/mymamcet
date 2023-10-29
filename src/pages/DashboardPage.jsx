@@ -1,19 +1,15 @@
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import { NavBar } from '../components/NavBar'
-import { Header } from '../components/Header'
+import { Link } from 'react-router-dom'
+import { PageHeader } from '../components/PageHeader'
 
 export const DashboardPage = () => {
   return (
-    <div className='min-h-screen bg-gray-100'>
-      <div className='flex'>
-        <NavBar />
-        <Header />
+    <div className='min-h-screen w-screen bg-[#EFF2F4] pr-6 pb-10'>
+      <div className='h-full pt-24 md:ml-96'>
+        <PageHeader title='Dashboard' enablePath={false} />
       </div>
-      
-
-        <div className='mt-20 md:ml-72 absolute top-0 md:top-5 left-5 lg:left-5 z-0'>
-          <h1 className='font-inter font-semibold text-xl tracking-tighter text-slate-700'>Dashboard</h1>
-        </div>
     </div>
   )
 }
