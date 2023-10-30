@@ -40,15 +40,15 @@ export const AddUserPage = () => {
                     <div className='w-full md:w-96 bg-white px-10 py-20'>
                         <div className='flex flex-col'>
                             <label className='font-inter font-medium text-slate-500 text-sm'>Name</label>
-                            <input type='text' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='John' onClick={(e) => setName(e.target.value)} />
+                            <input type='text' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='John' onChange={(e) => setName(e.target.value)} />
                         </div>
                         <div className='flex flex-col mt-5'>
                             <label className='font-inter font-medium text-slate-500 text-sm'>Email</label>
-                            <input type='email' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='username@example.com' onClick={(e) => setEmail(e.target.value)} />
+                            <input type='email' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='username@example.com' onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className='flex flex-col mt-5'>
                             <label className='font-inter font-medium text-slate-500 text-sm'>Password</label>
-                            <input type='password' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='8 character password' onClick={(e) => setPassword(e.target.value)} />
+                            <input type='password' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='8 character password' onChange={(e) => setPassword(e.target.value)} />
                         </div>
                         <div className='mt-5'>
                             <button className={`text-sm py-2 ${isLoading ? 'bg-blue-300' : 'bg-blue-500'} w-full font-inter text-white`} onClick={handleAddUser}>

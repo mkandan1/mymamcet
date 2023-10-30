@@ -16,6 +16,8 @@ import { NavBar } from './components/NavBar';
 import { Page404 } from './pages/404';
 import { MangeUsersPage } from './pages/User Management/MangeUsersPage';
 import { AddUserPage } from './pages/User Management/AddUserPage';
+import { BatchesPage } from './pages/BatchesPage';
+import { BatchDetailsPage } from './pages/BatchDetailsPage';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -107,6 +109,14 @@ function App() {
               <Route
                 path="/management/users/add"
                 element={<AddUserPage/>}
+              />
+              <Route
+                path="/management/students"
+                element={<BatchesPage/>}
+              />
+              <Route
+                path="/management/batch/details"
+                element={<BatchDetailsPage/>}
               />
               <Route
                 path="*"

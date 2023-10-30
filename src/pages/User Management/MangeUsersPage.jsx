@@ -12,7 +12,6 @@ export const MangeUsersPage = () => {
 
   useLayoutEffect(() => {
     setIsLoading(true);
-    console.log('entered into fetching');
     fetch(`${import.meta.env.VITE_API_URL}/fetch/users/all`, {
       method: 'GET',
       headers: {

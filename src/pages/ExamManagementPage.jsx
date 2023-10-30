@@ -1,14 +1,11 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { NavBar } from '../components/NavBar'
-import { Header } from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd, faAngleDown, faAngleRight, faEye, faMagnifyingGlass, faPlus, faSort, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faAngleDown, faEye, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../components/PageHeader'
 import { Table } from '../components/Table'
 
 export const ExamManagementPage = () => {
-  const [admin, setAdmin] = useState(true);
   const [departmentQuery, setDepartmentQuery] = useState([]);
   const [batchQuery, setBatchQuery] = useState([]);
   const [academicYearQuery, setAcademicYearQuery] = useState([]);

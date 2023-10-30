@@ -22,6 +22,7 @@ export const LoginPage = () => {
   // Input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useLayoutEffect(() => {
     console.log('Validating auth user');
@@ -69,13 +70,15 @@ export const LoginPage = () => {
   // Handle the form submission
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Check if email and password are valid
-    if (!hasError.email && !hasError.password) {
+    if (!hasError.email && !hasError.password && email != '' && password != '') {
       // Perform login or other actions here
       signInWithEmailAndPassword(auth, email, password)
         .then((userCrendential) => {
           console.log("Authentication successful");
+          setIsLoading(false);
           window.location.href = '/'
         })
         .catch((err) => {
@@ -85,10 +88,12 @@ export const LoginPage = () => {
               ...prev,
               invalid_mail_or_password: true
             }))
+            setIsLoading(false);
           }
         })
     } else {
       console.log('Email or password is invalid.');
+      setIsLoading(false);
     }
   };
 
@@ -169,7 +174,7 @@ export const LoginPage = () => {
                 onClick={handleFormSubmit}
                 className='w-full h-full bg-[#048BD7] text-white tracking-tighter font-inter text-sm sm:text-md rounded-md'
               >
-                Log In
+                {isLoading ? <span>Please wait</span> : <span>Log In</span>}
               </button>
             </div>
 
