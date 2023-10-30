@@ -10,37 +10,18 @@ import { auth } from '../FirebaseConfig'
 
 export const Header = () => {
     const dispatch = useDispatch();
-    const [userName, setUser] = useState({name: '', last_seen: '', photoURL: ''})
     const toggle = useSelector((state) => (state.toggle.status))
+    const [userName, setUser] = useState({name: '', last_seen: 'Not available', photoURL: ''})
 
     const handleToggleMenu = () => {
         toggle ? dispatch(TOGGLE_MENU_CLOSE()) : dispatch(TOGGLE_MENU_OPEN())
     }
 
     useLayoutEffect(() => {
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                try {
-                    const name = user.displayName;
-                    const profilePhotoURL = user.photoURL;
-                    const dateString = user.metadata.lastSignInTime;
-                    const gmtDate = new Date(dateString);
-
-                    // Format the date in the user's local time zone
-                    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
-                    const localDateString = new Intl.DateTimeFormat(undefined, options).format(gmtDate);
-
-
-                    setUser({name: name, last_seen: localDateString, photoURL: profilePhotoURL})
-                }
-                catch (e) {
-                    console.error(e);
-                }
-            }
-        })
+       
     })
     return (
-        <div className='w-screen border h-16 bg-blue-500 md:bg-white fixed top-0'>
+        <div className='w-screen h-16 bg-blue-500 md:bg-white fixed top-0'>
             <header className='flex justify-between w-full h-full items-center pl-5 pr-5'>
                 <FontAwesomeIcon icon={faBars} className='text-white md:hidden cursor-pointer' onClick={handleToggleMenu} />
 
@@ -56,7 +37,7 @@ export const Header = () => {
                             <img src={user} className='w-9 rounded-full border-2 border-green-400'></img>
                         </div>
                         <div className='ml-2'>
-                            <h2 className='text-sm font-inter font-medium text-slate-50 md:text-slate-500'>{userName.name}</h2>
+                            <h2 className='text-sm font-inter font-medium text-slate-50 md:text-slate-500'>Elamaran</h2>
                             <p className='text-xs font-inter text-blue-300 md:text-slate-400'>{userName.last_seen}</p>
                         </div>
                     </div>

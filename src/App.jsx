@@ -76,54 +76,56 @@ function App() {
       {isAuthenticated
         ? (
           <>
-            <Header />
-            <NavBar />
+            <div className='z-20'>
+              <NavBar />
+              <Header/>
+            </div>
             <Routes>
               <Route
                 path="/v1/auth/login"
-                element={<LoginPage/>} />
+                element={<LoginPage />} />
               <Route
                 path="/v1/auth/signup"
-                element={<LoginPage/>}
+                element={<LoginPage />}
               />
               <Route
                 path="/"
-                element={<DashboardPage/>}
+                element={<DashboardPage />}
               />
               <Route
                 path="/management/exam"
-                element={<ExamManagementPage/>}
+                element={<ExamManagementPage />}
               />
               <Route
                 path="/management/exam/students/add"
-                element={<AddStudentPage/>}
+                element={<AddStudentPage />}
               />
               <Route
                 path="/management/batch/add"
-                element={<NewBatch/>}
+                element={<NewBatch />}
               />
               <Route
                 path="/management/users"
-                element={<MangeUsersPage/>}
+                element={<MangeUsersPage />}
               />
               <Route
                 path="/management/users/add"
-                element={<AddUserPage/>}
+                element={<AddUserPage />}
               />
               <Route
                 path="/management/students"
-                element={<BatchesPage/>}
+                element={<BatchesPage />}
               />
               <Route
                 path="/management/batch/details"
-                element={<BatchDetailsPage/>}
+                element={<BatchDetailsPage />}
               />
               <Route
                 path="*"
-                element={<Page404/>}
+                element={<Page404 />}
               />
             </Routes>
-            
+
           </>
 
         ) : (
@@ -131,7 +133,7 @@ function App() {
             <Routes>
               <Route
                 path="/v1/auth/login"
-                element={<LoginPage/>}
+                element={<LoginPage />}
               />
               <Route
                 path="/v1/auth/signup"
@@ -139,9 +141,9 @@ function App() {
               />
               <Route
                 path="*"
-                element={<LoginPage/>}
+                element={<LoginPage />}
               />
-              
+
             </Routes>
           </>
         )

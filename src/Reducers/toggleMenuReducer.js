@@ -1,13 +1,19 @@
 const initialState = {
-    status: false,
-}
+    status: true,
+};
 
 const toggleMenuReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'TOGGLE_MENU_OPEN':
-            return { status: true };
+            return {
+                ...state,
+                status: true,
+            };
         case 'TOGGLE_MENU_CLOSE':
-            return { status: false };
+            return {
+                ...state,
+                status: false,
+            };
         default:
             return state;
     }

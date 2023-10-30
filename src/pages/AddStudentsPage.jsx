@@ -1,6 +1,4 @@
 import React from "react";
-import { NavBar } from "../components/NavBar";
-import { Header } from "../components/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -8,11 +6,6 @@ export const AddStudentPage = () => {
     return (
         <>
             <div className='min-h-screen w-screen bg-[#EFF2F4]'>
-                <div className='flex'>
-                    <NavBar />
-                    <Header />
-                </div>
-
                 <div className='mt-10 lg:mt-20 md:ml-72 absolute top-10 md:top-5 left-5 lg:left-5 z-0'>
                     <div className='flex justify-between'>
                         <div>

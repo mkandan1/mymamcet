@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { TOGGLE_MENU_OPEN, TOGGLE_MENU_CLOSE, LOGOUT } from '../actionTypes/actionTypes';
 import { signOut } from 'firebase/auth';
 import { auth } from '../FirebaseConfig';
+import { Header } from './Header';
 
 const asideStyles = {
   open: {
@@ -29,10 +30,10 @@ const asideStyles = {
 
   },
   closed: {
-    // opacity: 0,
+    opacity: 0,
     transform: 'translateX(-58rem)',
     transition: 'transform 0.6s ease-in-out, opacity 0.6s ease-in-out',
-    'zIndex': '1000',
+    'zIndex': '-10',
   },
 };
 
@@ -53,32 +54,35 @@ export const NavBar = () => {
   const path = useLocation().pathname;
 
   useLayoutEffect(() => {
+    console.log(toggle);
     if (screenWidth.width > 768 && !toggle) {
       dispatch(TOGGLE_MENU_OPEN());
-      // console.log('triggered');
     }
   }, [screenWidth]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const newWidth = window.innerWidth;
-      setScreenWidth({ width: newWidth });
-    };
+    // const handleResize = () => {
+    //   const newWidth = window.innerWidth;
+    //   setScreenWidth({ width: newWidth });
+    // };
 
-    window.addEventListener('resize', handleResize);
+    // window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    // return () => {
+    //   window.removeEventListener('resize', handleResize);
+    // };
   }, []);
 
   const handleToggleMenu = () => {
     if (toggle) {
+      console.log('Closing');
       dispatch(TOGGLE_MENU_CLOSE());
+      console.log(toggle);
     } else {
       dispatch(TOGGLE_MENU_OPEN());
     }
   };
+  
 
   const handleLogout = () => {
     signOut(auth).then(() => {
@@ -96,9 +100,10 @@ export const NavBar = () => {
   }
 
   return (
-    <aside
-      style={toggle ? asideStyles.open : (asideStyles.closed)}
-      className="w-80 sm:w-80 md:w-80 lg:w-80 xl:w-74 min-h-full left-0 top-0 bottom-0 fixed md:inline-block bg-[#313A46]"
+   <>
+     <aside
+      style={toggle ? (asideStyles.open) : (asideStyles.closed)}
+      className="w-80 sm:w-80 md:w-80 lg:w-80 xl:w-74 min-h-full fixed md:inline-block bg-[#313A46]"
       id="aside-nav"
     >
       <div className="h-16 grid grid-cols-1 grid-rows-1 items-center justify-items-center border-b-[1px] border-[#4A4A4A] relative">
@@ -171,8 +176,10 @@ export const NavBar = () => {
           <FontAwesomeIcon icon={faRightFromBracket} /> Logout
         </button>
       </div>
-
+          
     </aside>
-
+    
+    <Header/>
+   </>
   );
 };

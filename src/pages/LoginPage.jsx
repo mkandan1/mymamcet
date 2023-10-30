@@ -79,7 +79,6 @@ export const LoginPage = () => {
         .then((userCrendential) => {
           console.log("Authentication successful");
           setIsLoading(false);
-          window.location.href = '/'
         })
         .catch((err) => {
           console.error("Error occurred while authenticating!");
