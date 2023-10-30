@@ -61,16 +61,16 @@ export const NavBar = () => {
   }, [screenWidth]);
 
   useEffect(() => {
-    // const handleResize = () => {
-    //   const newWidth = window.innerWidth;
-    //   setScreenWidth({ width: newWidth });
-    // };
+    const handleResize = () => {
+      const newWidth = window.innerWidth;
+      setScreenWidth({ width: newWidth });
+    };
 
-    // window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
-    // return () => {
-    //   window.removeEventListener('resize', handleResize);
-    // };
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleToggleMenu = () => {
