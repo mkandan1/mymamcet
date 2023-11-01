@@ -114,6 +114,10 @@ function App() {
                 path="/main/batches"
                 element={<BatchesPage />}
               />
+              <Route
+                path="/main/batch/details"
+                element={<BatchDetailsPage />}
+              />
                <Route
                 path="/main/batches/batch/add"
                 element={<AddBatchPage />}

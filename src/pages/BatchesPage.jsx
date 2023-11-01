@@ -118,7 +118,7 @@ export const BatchesPage = () => {
 
                     <div className='max-w-full ml-2 mt-10 overflow-x-auto pr-5'>
                         <Table header={header} data={searchResult} enableRowAction={true} renderRowAction={({ row }) => (
-                            <Link className='text-blue-500 text-xs' to={`/management/batch/details?department=${row['Department']}&batch=${row['Batch']}`}>Update</Link>
+                            <Link className='text-blue-500 text-sm font-inter' to={`/main/batch/details?department=${row['Department']}&batch=${row['Batch']}`}>Manage</Link>
                         )} />
                     </div>
                 ) : <></>}

@@ -203,14 +203,14 @@ export const AddBatchPage = () => {
                                 <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5">Semester</label>
                                 <select type='text' className={`rounded-sm border-[1px] text-sm text-slate-500 ${errField.semester ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'semester')}>
                                     <option value='default' className='text-sm'>Select Semester</option>
-                                    <option value='I' className='text-sm'>1 SEM</option>
-                                    <option value='II' className='text-sm'>2 SEM</option>
-                                    <option value='III' className='text-sm'>3 SEM</option>
-                                    <option value='IV' className='text-sm'>4 SEM</option>
-                                    <option value='V' className='text-sm'>5 SEM</option>
-                                    <option value='VI' className='text-sm'>6 SEM</option>
-                                    <option value='VII' className='text-sm'>7 SEM</option>
-                                    <option value='VIII' className='text-sm'>8 SEM</option>
+                                    <option value='1 SEM' className='text-sm'>1 SEM</option>
+                                    <option value='2 SEM' className='text-sm'>2 SEM</option>
+                                    <option value='3 SEM' className='text-sm'>3 SEM</option>
+                                    <option value='4 SEM' className='text-sm'>4 SEM</option>
+                                    <option value='5 SEM' className='text-sm'>5 SEM</option>
+                                    <option value='6 SEM' className='text-sm'>6 SEM</option>
+                                    <option value='7 SEM' className='text-sm'>7 SEM</option>
+                                    <option value='8 SEM' className='text-sm'>8 SEM</option>
                                 </select>
                                 <p className='text-xs mt-1 text-red-400'>{errField.semester ? 'Select any option' : ''}</p>
                             </div>
