@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { PageHeader } from '../components/PageHeader'
 import { Table } from '../components/Table'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faAngleDown, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 export const BatchesPage = () => {
@@ -21,23 +21,23 @@ export const BatchesPage = () => {
         newInputs[0][field] = input;
         setSelectedQueries(newInputs);
 
-        fetch(`${import.meta.env.VITE_API_URL}/fetch/management/batches`, {
-            method: 'POST',
+        const department = selectedQueries[0].department;
+
+        fetch(`${import.meta.env.VITE_API_URL}/fetch/batches?department=${department}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ search_queries: selectedQueries })
         })
             .then((res) => { return res.json() })
             .then((data) => {
-
                 if (data.result == null) {
                     setShowLoading(false)
                     return setIsNoResult(true)
                 }
                 setIsNoResult(false);
-                // console.log(Object.values(data.result));
-                setSearchResult(data.result)
+                console.log(Object.values(data.result));
+                setSearchResult(Object.values(data.result))
                 setIsSearchCompleted(true)
                 setShowLoading(false)
             })
@@ -64,7 +64,12 @@ export const BatchesPage = () => {
     return (
         <div className='min-h-screen w-screen bg-[#EFF2F4] pr-6 pb-10'>
             <div className='h-full pt-24 md:ml-96'>
-                <PageHeader title="Batches" enablePath={true} rootPath="Exam Management" subPath="Batch" />
+                <div className='flex justify-between'>
+                    <PageHeader title="Batches" enablePath={true} rootPath="Exam Management" subPath="Batch" />
+                    <div className='h-8'>
+                        <Link to='/main/batches/batch/add' className='ml-2 text-sm bg-green-500 font-poppins text-white px-5 py-2 tracking-tight'><FontAwesomeIcon icon={faAdd} className='mr-3' />New Batch</Link>
+                    </div>
+                </div>
                 {
                     isQueryLoaded ? (
                         <>

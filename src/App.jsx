@@ -9,8 +9,7 @@ import { app } from './FirebaseConfig'
 import { useSelector, useDispatch } from 'react-redux'
 import { LOGIN, LOGOUT, REMOVE_LOADING } from './actionTypes/actionTypes';
 import { ExamManagementPage } from './pages/ExamManagementPage';
-import { AddStudentPage } from './pages/AddStudentsPage';
-import { NewBatch } from './pages/BatchAddPage';
+// import { NewBatch } from './pages/BatchAddPage';
 import { Header } from './components/Header';
 import { NavBar } from './components/NavBar';
 import { Page404 } from './pages/404';
@@ -18,6 +17,8 @@ import { MangeUsersPage } from './pages/User Management/MangeUsersPage';
 import { AddUserPage } from './pages/User Management/AddUserPage';
 import { BatchesPage } from './pages/BatchesPage';
 import { BatchDetailsPage } from './pages/BatchDetailsPage';
+import { StudentsListPage } from './pages/StudentsListPage';
+import { AddBatchPage } from './pages/AddBatchPage';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -96,14 +97,7 @@ function App() {
                 path="/management/exam"
                 element={<ExamManagementPage />}
               />
-              <Route
-                path="/management/exam/students/add"
-                element={<AddStudentPage />}
-              />
-              <Route
-                path="/management/batch/add"
-                element={<NewBatch />}
-              />
+              
               <Route
                 path="/management/users"
                 element={<MangeUsersPage />}
@@ -113,12 +107,16 @@ function App() {
                 element={<AddUserPage />}
               />
               <Route
-                path="/management/students"
-                element={<BatchesPage />}
+                path="/main/students/list"
+                element={<StudentsListPage />}
               />
               <Route
-                path="/management/batch/details"
-                element={<BatchDetailsPage />}
+                path="/main/batches"
+                element={<BatchesPage />}
+              />
+               <Route
+                path="/main/batches/batch/add"
+                element={<AddBatchPage />}
               />
               <Route
                 path="*"

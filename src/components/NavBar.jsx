@@ -12,7 +12,8 @@ import {
   faBars,
   faRightFromBracket,
   faPeopleGroup,
-  faUserAlt
+  faUserAlt,
+  faGraduationCap
 } from '@fortawesome/free-solid-svg-icons';
 import user from '/user.png'
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,12 +50,11 @@ export const NavBar = () => {
   const dispatch = useDispatch();
   const toggle = useSelector((state) => state.toggle.status);
   const [screenWidth, setScreenWidth] = useState(getScreenWidth());
-  const [showSubPath, setShowSubPath] = useState([{ exam_management: false }]);
+  const [showSubPath, setShowSubPath] = useState([{ exam_management: false, students: false }]);
 
   const path = useLocation().pathname;
 
   useLayoutEffect(() => {
-    console.log(toggle);
     if (screenWidth.width > 768 && !toggle) {
       dispatch(TOGGLE_MENU_OPEN());
     }
@@ -82,7 +82,7 @@ export const NavBar = () => {
       dispatch(TOGGLE_MENU_OPEN());
     }
   };
-  
+
 
   const handleLogout = () => {
     signOut(auth).then(() => {
@@ -100,86 +100,105 @@ export const NavBar = () => {
   }
 
   return (
-   <>
-     <aside
-      style={toggle ? (asideStyles.open) : (asideStyles.closed)}
-      className="w-80 sm:w-80 md:w-80 lg:w-80 xl:w-74 min-h-full fixed md:inline-block bg-[#313A46]"
-      id="aside-nav"
-    >
-      <div className="h-16 grid grid-cols-1 grid-rows-1 items-center justify-items-center border-b-[1px] border-[#4A4A4A] relative">
-        <Link to="/" className="text-[#E7E7E7] font-inter font-normal">
-          my<span className="font-bold">MAMCET</span>
-        </Link>
-        <FontAwesomeIcon
-          icon={faClose}
-          className="absolute md:hidden right-10 text-[#E7E7E7] cursor-pointer"
-          onClick={handleToggleMenu}
-        />
-      </div>
-      <div>
-        <div className="pt-10">
-          <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">Main Menu</h3>
-          <nav className="text-gray-300 mt-5 grid gap-y-1">
-            <Link to="/">
-              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm" id={(path === '/') ? 'active' : ''}>
-                <FontAwesomeIcon icon={faChartSimple} className="mr-2" /> Dashboard
-              </li>
-            </Link>
-            <Link to="/_s/attendance">
-              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/attendance') ? 'active' : ''}>
-                <FontAwesomeIcon icon={faClipboardUser} className="mr-2" /> Attendance{' '}
-                <FontAwesomeIcon icon={faAngleRight} className="absolute right-10 top-3" />
-              </li>
-            </Link>
-            <Link to="/_s/billing">
-              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/billing') ? 'active' : ''}>
-                <FontAwesomeIcon icon={faReceipt} className="mr-2" /> Billing{' '}
-                <FontAwesomeIcon icon={faAngleRight} className="absolute right-10 top-3" />
-              </li>
-            </Link>
-          </nav>
+    <>
+      <aside
+        style={toggle ? (asideStyles.open) : (asideStyles.closed)}
+        className="w-80 sm:w-80 md:w-80 lg:w-80 xl:w-74 min-h-full fixed md:inline-block bg-[#313A46]"
+        id="aside-nav"
+      >
+        <div className="h-16 grid grid-cols-1 grid-rows-1 items-center justify-items-center border-b-[1px] border-[#4A4A4A] relative">
+          <Link to="/" className="text-[#E7E7E7] font-inter font-normal">
+            my<span className="font-bold">MAMCET</span>
+          </Link>
+          <FontAwesomeIcon
+            icon={faClose}
+            className="absolute md:hidden right-10 text-[#E7E7E7] cursor-pointer"
+            onClick={handleToggleMenu}
+          />
         </div>
-        <div className="pt-10">
-          <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">Management</h3>
-          <nav className="text-gray-300 mt-5 grid gap-y-1">
-            <Link to="/management/exam">
-              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
-                <FontAwesomeIcon icon={faFilePen} className="mr-2" /> Exam Management{' '}
-                <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300 ${showSubPath[0].exam_management ? '-rotate-90' : ''}`} onClick={() => handleSubPathShowing('exam_management')} />
+        <div>
+          <div className="pt-10">
+            <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">Main Menu</h3>
+            <nav className="text-gray-300 mt-5 grid gap-y-1">
+              <Link to="/">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm" id={(path === '/') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faChartSimple} className="mr-2" /> Dashboard
+                </li>
+              </Link>
+              <Link to="/main/batches">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faPeopleGroup} className="mr-2" /> Batches
+                  <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
+                </li>
+              </Link>
+              <Link to="/main/semesters">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faGraduationCap} className="mr-2" /> Semesters
+                  <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
+                </li>
+              </Link>
+              <div className='hover:bg-[#CFEBFC] hover:bg-opacity-20 mr-3 rounded-r-sm cursor-pointer' onClick={() => handleSubPathShowing('students')}>
+                <nav>
+                  <li className="list-none font-inter font-normal pl-10 text-[#9AB4C3] p-2 text-xs sm:text-sm relative" id={(path === '/attendance') ? 'active' : ''}>
+                    <FontAwesomeIcon icon={faClipboardUser} className="mr-2" /> Students
+                    <FontAwesomeIcon icon={faAngleRight} className={`absolute transition-all duration-200 right-10 top-3 ${showSubPath[0].students ? '-rotate-90' : ''}`} />
+                  </li>
+                </nav>
                 {
-                  showSubPath[0].exam_management ? (
-                    <ul className='ml-10 mt-2 py-2'>
-                      <li><Link to={'/management/students'}><FontAwesomeIcon icon={faPeopleGroup} className="mr-2" />Manage Batches</Link></li>
+                  showSubPath[0].students ? (
+                    <ul className='ml-10 mt-2 py-1 pb-4 pl-5'>
+                      <li className='text-sm font-inter text-[#9AB4C3]'><Link to={'/main/students/list'}><FontAwesomeIcon icon={faPeopleGroup} className="mr-2" />Students List</Link></li>
                     </ul>
                   ) : <></>
                 }
-              </li>
-
-            </Link>
-          </nav>
+              </div>
+              {/* <Link to="/_s/attendance">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/attendance') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faClipboardUser} className="mr-2" /> Attendance
+                  <FontAwesomeIcon icon={faAngleRight} className="absolute right-10 top-3" />
+                </li>
+              </Link>
+              <Link to="/_s/billing">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/billing') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faReceipt} className="mr-2" /> Billing{' '}
+                  <FontAwesomeIcon icon={faAngleRight} className="absolute right-10 top-3" />
+                </li>
+              </Link> */}
+            </nav>
+          </div>
+          <div className="pt-10">
+            <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">Management</h3>
+            <nav className="text-gray-300 mt-5 grid gap-y-1">
+              <Link to="/management/exam">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faFilePen} className="mr-2" /> Exam Management{' '}
+                  <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
+                </li>
+              </Link>
+            </nav>
+          </div>
+          <div className="pt-10">
+            <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">User Management</h3>
+            <nav className="text-gray-300 mt-5 grid gap-y-1">
+              <Link to="/management/users">
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/users') ? 'active' : ''}>
+                  <FontAwesomeIcon icon={faUserAlt} className="mr-2" />Manage Users
+                  {/* <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} onClick={() => handleSubPathShowing('exam_management')} /> */}
+                </li>
+              </Link>
+            </nav>
+          </div>
         </div>
-        <div className="pt-10">
-          <h3 className="text-[#9CA3AF] font-poppins text-xs pl-10">User Management</h3>
-          <nav className="text-gray-300 mt-5 grid gap-y-1">
-            <Link to="/management/users">
-              <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/users') ? 'active' : ''}>
-                <FontAwesomeIcon icon={faUserAlt} className="mr-2" />Manage Users
-                {/* <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} onClick={() => handleSubPathShowing('exam_management')} /> */}
-              </li>
-            </Link>
-          </nav>
-        </div>
-      </div>
 
-      <div className='w-full absolute bottom-10 pl-10 pr-10'>
-        <button className=' text-[#9CA3AF] text-sm font-inter grid grid-cols-2 items-center' onClick={handleLogout}>
-          <FontAwesomeIcon icon={faRightFromBracket} /> Logout
-        </button>
-      </div>
-          
-    </aside>
-    
-    <Header/>
-   </>
+        <div className='w-full absolute bottom-10 pl-10 pr-10'>
+          <button className=' text-[#9CA3AF] text-sm font-inter grid grid-cols-2 items-center' onClick={handleLogout}>
+            <FontAwesomeIcon icon={faRightFromBracket} /> Logout
+          </button>
+        </div>
+
+      </aside>
+
+      <Header />
+    </>
   );
 };
