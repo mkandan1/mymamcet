@@ -37,7 +37,7 @@ export const Header = () => {
                             <img src={user} className='w-9 rounded-full border-2 border-green-400'></img>
                         </div>
                         <div className='ml-2'>
-                            <h2 className='text-sm font-inter font-medium text-slate-50 md:text-slate-500'>Kalaiyarasan</h2>
+                            <h2 className='text-sm font-inter font-medium text-slate-50 md:text-slate-500'>Elamaran E</h2>
                             <p className='text-xs font-inter text-blue-300 md:text-slate-400'>{userName.last_seen}</p>
                         </div>
                     </div>
