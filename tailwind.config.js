@@ -19,7 +19,11 @@ export default withMT({
         'poppins': ['Poppins','sans-serif' ],
         'red-hat': ['Red Hat Display','sans-serif' ],
         'manrope': ['Manrope','sans-serif' ],
-      }
+      },
+      colors: {
+        'fig-orange': '#FBBC05',
+        'fig-green' : '#46D26B',
+      },
     },
   },
   plugins: [],

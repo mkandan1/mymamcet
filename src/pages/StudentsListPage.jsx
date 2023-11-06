@@ -3,6 +3,7 @@ import { PageHeader } from '../components/PageHeader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faAngleDown, faGear, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
+import { Button } from '@material-tailwind/react'
 
 export const StudentsListPage = () => {
     const [selectedQueries, setSelectedQueries] = useState([{ department: 'default', batch: 'default', academic_year: 'default', semester: 'default', exam_type: 'default' }])
@@ -55,6 +56,15 @@ export const StudentsListPage = () => {
                                         <div className="absolute inset-y-0 right-0 flex items-center pr-8 pointer-events-none">
                                             <FontAwesomeIcon icon={faAngleDown} className='text-[#9AB4C3] text-sm' />
                                         </div>
+                                    </div>
+                                </div>
+                                <div className='w-52 mt-5 mr-2'>
+                                    <div className="relative">
+                                        <Button 
+                                        className='appearance-none'
+                                        color='light-blue'
+                                        variant=''
+                                        ><Link to="/main/students/list/StudentPerformence">Student Performence</Link></Button>
                                     </div>
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ import { Table } from '../components/Table'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAdd, faAngleDown, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
-
+import { Button } from '@material-tailwind/react'
 export const BatchesPage = () => {
     const [header, setHeader] = useState(['Department', 'Year', 'Semester', 'Batch', 'Academic Year']);
     const [departmentQuery, setDepartmentQuery] = useState([]);
@@ -92,6 +92,7 @@ export const BatchesPage = () => {
                                     </div>
                                 </div>
                             </div>
+                            <DeptBadgeDetails/>
                         </>
                     ) : (
                         <div className='w-full h-screen pt-20 flex justify-center'>
@@ -126,3 +127,35 @@ export const BatchesPage = () => {
         </div>
     )
 }
+
+const DeptBadgeDetails = () =>{
+    // Defining the variables for the integration database
+    const Dept = "IT";
+    const Year = "III";
+    const Sem = 5;
+    const StudentsCount = 60;
+    return(
+      <>
+      {/* This line is work so dont touch it */}
+      <div className='mt-7 w-full h-28 bg-white shadow rounded-lg flex   '>
+        <div className='w-20 h-20 m-4 bg-blue-500 self-center rounded grid'>
+            <p className='text-center text-3xl text-white place-self-center'>{Dept}</p>
+        </div>
+        <div className='flex-initial w-96 m-4 place-items-start   text-gray-500   '>
+            <p>{Year} YEAR | SEM {Sem} </p>
+            <p>{StudentsCount} Students</p>
+        </div>
+        <div className='justify-self-end '>
+            <div className='flex mt-4 justify-end'>
+                <div className='h-8'>
+                        <Link to='' className='ml-2 text-xs bg-fig-green font-poppins text-white px-6 py-1 tracking-tight'>Add Student</Link>
+                    </div>
+                    <div className='h-8'>
+                        <Link to='' className='ml-2 text-xs bg-fig-orange font-poppins text-white px-6 py-1 tracking-tight'>Promote Batch</Link>
+                    </div>
+            </div>
+        </div>
+      </div>
+      </>
+    )
+  }
