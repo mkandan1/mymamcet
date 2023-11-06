@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { PageHeader } from '../components/PageHeader';
 import * as XLSX from 'xlsx'
+import { Tooltip } from "@material-tailwind/react";
 
 export const AddBatchPage = () => {
 
@@ -235,6 +236,13 @@ export const AddBatchPage = () => {
                             </div>
                             <div className='mt-5 flex justify-between'>
                                 <Link to="/main/students/list" className='bg-slate-200 flex text-sm justify-center p-2 pl-8 pr-8'>Cancel</Link>
+                                <Tooltip 
+                                    content="Confirm the Data before save the Batch" 
+                                    animate={{
+                                        mount: { scale: 1, y: 0 },
+                                        unmount: { scale: 0, y: 25 },
+                                      }}
+                                >
                                 <button
                                     className={`bg-blue-500 text-white p-2 rounded-sm text-sm pl-8 pr-8 ${isCreateButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''
                                         }`}
@@ -242,6 +250,7 @@ export const AddBatchPage = () => {
                                 >
                                     Create
                                 </button>
+                                </Tooltip>
                             </div>
                         </div>
                     </div>
