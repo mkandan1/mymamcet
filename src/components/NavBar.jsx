@@ -13,7 +13,8 @@ import {
   faRightFromBracket,
   faPeopleGroup,
   faUserAlt,
-  faGraduationCap
+  faGraduationCap,
+  faBook
 } from '@fortawesome/free-solid-svg-icons';
 import user from '/user.png'
 import { useSelector, useDispatch } from 'react-redux';
@@ -131,9 +132,9 @@ export const NavBar = () => {
                   <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
                 </li>
               </Link>
-              <Link to="/main/semesters">
+              <Link to="/main/subjects">
                 <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
-                  <FontAwesomeIcon icon={faGraduationCap} className="mr-2" /> Semesters
+                  <FontAwesomeIcon icon={faBook} className="mr-2" /> Subjects
                   <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
                 </li>
               </Link>
