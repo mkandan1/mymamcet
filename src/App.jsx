@@ -19,7 +19,12 @@ import { BatchesPage } from './pages/BatchesPage';
 import { BatchDetailsPage } from './pages/BatchDetailsPage';
 import { StudentsListPage } from './pages/StudentsListPage';
 import { AddBatchPage } from './pages/AddBatchPage';
+<<<<<<< HEAD
 import { StudentPerformencePage } from './pages/StudentPerformencePage'
+=======
+import { SubjectsPage } from './pages/Subjects/SubjectsPage';
+import { NewSubjectsPage } from './pages/Subjects/NewSubjectsPage';
+>>>>>>> 23111df9a5ddaac48e259a86262ab8188ab3df03
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -126,6 +131,14 @@ function App() {
                <Route
                 path="/main/batches/batch/add"
                 element={<AddBatchPage />}
+              />
+              <Route
+                path="/main/subjects"
+                element={<SubjectsPage />}
+              />
+              <Route
+                path="/main/subjects/subject/add"
+                element={<NewSubjectsPage />}
               />
               <Route
                 path="*"
