@@ -1,35 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { PageHeader } from '../../components/PageHeader'
-import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch } from 'react-redux';
+import { SET_NOTIFICATION_ON } from '../../actionTypes/actionTypes';
 
 export const AddUserPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
+    const [role, setRole] = useState(null)
+    const dis = useDispatch();
 
     const handleAddUser = () => {
         setIsLoading(true);
-        console.log('entered into fetching');
         fetch(`${import.meta.env.VITE_API_URL}/add/user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({data: {name: name, email: email, password: password}})
+            body: JSON.stringify({ data: { name: name, email: email, password: password, role: role } })
         })
             .then((res) => { return res.json() })
             .then((data) => {
                 console.log(data);
-                setIsLoading(false)
+                setIsLoading(false);
+                dis(SET_NOTIFICATION_ON(1, "User has been added to the platform"))
             })
             .catch((err) => {
                 setIsLoading(false)
+                console.log(err);
+                dis(SET_NOTIFICATION_ON(0, "Unable to add user"))
             })
-
-        setIsLoading(false)
     }
     return (
         <div className='min-h-screen w-screen bg-[#EFF2F4] pr-6 pb-10'>
@@ -49,6 +52,15 @@ export const AddUserPage = () => {
                         <div className='flex flex-col mt-5'>
                             <label className='font-inter font-medium text-slate-500 text-sm'>Password</label>
                             <input type='password' className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='8 character password' onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+                        <div className='flex flex-col mt-5'>
+                            <label className='font-inter font-medium text-slate-500 text-sm'>Role</label>
+                            <select className='outline-none border h-8 pl-5 text-sm text-slate-700 mt-2 font-inter' placeholder='8 character password' onChange={(e) => setRole(e.target.value)}>
+                                <option value="professor">Professor</option>
+                                <option value="student">Student</option>
+                                <option value="hod">HoD</option>
+                                <option value="admin">Admin</option>
+                            </select>
                         </div>
                         <div className='mt-5'>
                             <button className={`text-sm py-2 ${isLoading ? 'bg-blue-300' : 'bg-blue-500'} w-full font-inter text-white`} onClick={handleAddUser}>

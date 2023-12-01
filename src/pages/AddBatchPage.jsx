@@ -10,6 +10,7 @@ import { Tooltip } from "@material-tailwind/react";
 import { Notification } from '../components/Notification';
 import { useDispatch } from 'react-redux';
 import { SET_NOTIFICATION_OFF, SET_NOTIFICATION_ON } from '../actionTypes/actionTypes';
+import { getUserIdToken } from '../services/AuthService';
 export const AddBatchPage = () => {
 
     // This state stores details of the Batch
@@ -146,10 +147,22 @@ export const AddBatchPage = () => {
         const data = { ...batchDetails, studentsList };
 
         try {
+            const idToken = await getUserIdToken();
+
+            try {
+                if(idToken == null){
+                    return new Error('User not logged in')
+                }
+            }
+            catch(err){
+                console.error(err);
+            }
+
             const response = await fetch(`${import.meta.env.VITE_API_URL}/batches/add`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
                 },
                 body: JSON.stringify({ batch_details: data })
             })
@@ -164,7 +177,7 @@ export const AddBatchPage = () => {
             }
         }
         catch (error) {
-            dispatch(SET_NOTIFICATION_ON(0, 'Something went wrong'));
+            dispatch(SET_NOTIFICATION_ON(0, error.message));
         }
     }
 
