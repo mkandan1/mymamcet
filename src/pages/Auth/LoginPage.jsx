@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Google from '../assets/uploads/search.png';
+import Google from '../../assets/uploads/search.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleXmark, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
-import { app, auth } from '../FirebaseConfig';
+import { app, auth } from '../../FirebaseConfig';
 import { useLayoutEffect } from 'react';
 
 export const LoginPage = () => {
@@ -91,6 +91,10 @@ export const LoginPage = () => {
           }
         })
     } else {
+      setHasError((prev) => ({
+        ...prev,
+        invalid_mail_or_password: true
+      }))
       console.log('Email or password is invalid.');
       setIsLoading(false);
     }
@@ -119,8 +123,8 @@ export const LoginPage = () => {
               <p className='font-inter text-sm sm:text-md text-gray-400 tracking-tight'>Please enter the below details to proceed login</p>
             </div>
             {/* Display error */}
-            <div className={`w-full h-10 bg-red-300 border-red-500 mt-5 transition-all duration-150 ${hasError.invalid_mail_or_password ? '' : 'hidden'}`}>
-
+            <div className={`w-full h-10 bg-red-500 rounded-sm border-[1px] flex justify-center items-center text-white border-red-500 mt-5 transition-all duration-150 ${hasError.invalid_mail_or_password ? '' : 'hidden'}`}>
+              <p>Email or Password is invalid</p>
             </div>
 
             {/* Email */}
@@ -171,7 +175,7 @@ export const LoginPage = () => {
             <div className='w-full h-10 sm:h-12 mt-10'>
               <button
                 onClick={handleFormSubmit}
-                className='w-full h-full bg-[#048BD7] text-white tracking-tighter font-inter text-sm sm:text-md rounded-md'
+                className={`w-full h-full  ${isLoading ? 'bg-blue-300' : 'bg-[#048BD7]'} text-white tracking-tighter font-inter text-sm sm:text-md rounded-md`}
               >
                 {isLoading ? <span>Please wait</span> : <span>Log In</span>}
               </button>

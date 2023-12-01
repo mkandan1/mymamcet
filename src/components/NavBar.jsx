@@ -127,20 +127,20 @@ export const NavBar = () => {
                 </li>
               </Link>
               <Link to="/main/batches">
-                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/main/batches') ? 'active' : ''}>
                   <FontAwesomeIcon icon={faPeopleGroup} className="mr-2" /> Batches
                   <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
                 </li>
               </Link>
               <Link to="/main/subjects">
-                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/management/exam') ? 'active' : ''}>
+                <li className="list-none font-inter font-normal pl-10 hover:bg-[#CFEBFC] transition-all duration-150 hover:bg-opacity-20 text-[#9AB4C3] mr-3 p-2 rounded-r-sm text-xs sm:text-sm relative" id={(path === '/main/subjects') ? 'active' : ''}>
                   <FontAwesomeIcon icon={faBook} className="mr-2" /> Subjects
                   <FontAwesomeIcon icon={faAngleRight} className={`absolute right-10 top-3 transition-all duration-300`} />
                 </li>
               </Link>
               <div className='hover:bg-[#CFEBFC] hover:bg-opacity-20 mr-3 rounded-r-sm cursor-pointer' onClick={() => handleSubPathShowing('students')}>
                 <nav>
-                  <li className="list-none font-inter font-normal pl-10 text-[#9AB4C3] p-2 text-xs sm:text-sm relative" id={(path === '/attendance') ? 'active' : ''}>
+                  <li className="list-none font-inter font-normal pl-10 text-[#9AB4C3] p-2 text-xs sm:text-sm relative" id={(path === '/main/students/list') ? 'active' : ''}>
                     <FontAwesomeIcon icon={faClipboardUser} className="mr-2" /> Students
                     <FontAwesomeIcon icon={faAngleRight} className={`absolute transition-all duration-200 right-10 top-3 ${showSubPath[0].students ? '-rotate-90' : ''}`} />
                   </li>

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import { LoadingPage } from './pages/LoadingPage';
-import { LoginPage } from './pages/LoginPage';
+import { LoginPage } from './pages/Auth/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from './FirebaseConfig'
@@ -22,6 +22,7 @@ import { AddBatchPage } from './pages/AddBatchPage';
 import { StudentPerformencePage } from './pages/StudentPerformencePage';
 import { SubjectsPage } from './pages/Subjects/SubjectsPage';
 import { NewSubjectsPage } from './pages/Subjects/NewSubjectsPage';
+import { Notification } from './components/Notification';
 
 // Allow the user to access Dashboard only if authenticated
 const PrivateRoute = ({ element, isAuthenticated }) => {
@@ -47,6 +48,7 @@ function App() {
   const isAuthenticated = useSelector((state) => (state.auth.isAuthenticated))
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => (state.loading.isLoading));
+  const showNotification = useSelector((state)=> (state.notification.showNotification));
 
   useEffect(() => {
     const auth = getAuth(app)
@@ -83,6 +85,7 @@ function App() {
             <div className='z-20'>
               <NavBar />
               <Header/>
+              <Notification show={showNotification}/>
             </div>
             <Routes>
               <Route
