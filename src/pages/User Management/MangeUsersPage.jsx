@@ -1,32 +1,41 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { PageHeader } from '../../components/PageHeader'
 import { Table } from '../../components/Table'
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { getUserIdToken } from '../../services/AuthService'
 
 export const MangeUsersPage = () => {
   const [header, setHeader] = useState(['Name', 'Email', 'Role']);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useLayoutEffect(() => {
-    setIsLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/fetch/users/all`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => { return res.json() })
-      .then((data) => {
-        setUsers(data.users)
-        setIsLoading(false)
+  useEffect(() => {
+    const unsubscribe = async () => {
+      setIsLoading(true);
+
+      const idToken = await getUserIdToken();
+
+      fetch(`${import.meta.env.VITE_API_URL}/platform/users/getAllUsers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        }
       })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false)
-      })
+        .then((res) => { return res.json() })
+        .then((data) => {
+          setUsers(data.users)
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false)
+        })
+    }
+
+    unsubscribe();
   }, [])
   return (
     <div className='min-h-screen w-screen bg-[#EFF2F4] pr-6 pb-10'>

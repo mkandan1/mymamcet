@@ -15,7 +15,7 @@ export const AddUserPage = () => {
 
     const handleAddUser = () => {
         setIsLoading(true);
-        fetch(`${import.meta.env.VITE_API_URL}/add/user`, {
+        fetch(`${import.meta.env.VITE_API_URL}/platform/users/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

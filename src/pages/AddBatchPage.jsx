@@ -19,7 +19,8 @@ export const AddBatchPage = () => {
         department: '',
         year: '',
         semester: '',
-        academicYear: ''
+        academicYear: '',
+        regulation : ''
     });
 
     const [errField, setErrField] = useState({
@@ -29,13 +30,14 @@ export const AddBatchPage = () => {
         semester: false,
         registerNumber: false,
         academicYear: false,
-        studentsList: false
+        studentsList: false,
+        regulation: false
     });
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [isCreateButtonDisabled, setCreateButtonDisabled] = useState(true);
     const [studentsList, setStudentsList] = useState({});
     const [fileName, setFileName] = useState(null);
     const dispatch = useDispatch();
+    const [btnLoading, setBtnLoading] = useState(false);
 
 
     const handleFileChange = (event) => {
@@ -102,6 +104,14 @@ export const AddBatchPage = () => {
                     errField[field] = true;
                 }
                 break;
+            case "regulation":
+                if (value != '' && value != 'default') {
+                    errField[field] = false;
+                }
+                else {
+                    errField[field] = true;
+                }
+                break;
 
             case "academicYear":
                 const pattern = /^\d{4}\s*-\s*\d{4}$/;
@@ -144,21 +154,29 @@ export const AddBatchPage = () => {
     }
 
     const handleBatchAdd = async () => {
+        setBtnLoading(true);
+
+        if (batchDetails.batch == '' || batchDetails.regulation == '' || batchDetails.academicYear == '' || batchDetails.department == '' || batchDetails.semester == '' || batchDetails.year == '') {
+            setBtnLoading(false);
+            dispatch(SET_NOTIFICATION_ON(0, 'Kindly fill all the fields'))
+            return
+        }
+
         const data = { ...batchDetails, studentsList };
 
         try {
             const idToken = await getUserIdToken();
 
             try {
-                if(idToken == null){
+                if (idToken == null) {
                     return new Error('User not logged in')
                 }
             }
-            catch(err){
+            catch (err) {
                 console.error(err);
             }
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/batches/add`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/batch/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,12 +189,15 @@ export const AddBatchPage = () => {
 
             if (!resData.status) {
                 throw new Error(`Something went wrong on backend`)
+                setBtnLoading(false)
             }
             else {
+                setBtnLoading(false)
                 dispatch(SET_NOTIFICATION_ON(1, 'Successfully created new batch'));
             }
         }
         catch (error) {
+            setBtnLoading(false)
             dispatch(SET_NOTIFICATION_ON(0, error.message));
         }
     }
@@ -215,7 +236,7 @@ export const AddBatchPage = () => {
                                 <div className='flex flex-col'>
                                     <label className="font-medium text-slate-600 text-sm font-inter tracking-tight mt-5">Department</label>
                                     <select type='text' className={`rounded-md bg-gray-50 border-[1.5px] py-2 font-poppins text-sm text-slate-500 ${errField.department ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'department')}>
-                                        <option value='default' className='text-sm'>Select Department</option>
+                                        <option value='' className='text-sm'>Select Department</option>
                                         <option value='IT' className='text-sm'>IT</option>
                                         <option value='CSE' className='text-sm'>CSE</option>
                                         <option value='ECE' className='text-sm'>ECE</option>
@@ -229,7 +250,7 @@ export const AddBatchPage = () => {
                                 <div className='flex flex-col'>
                                     <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5">Year</label>
                                     <select type='text' className={`rounded-md bg-gray-50 border-[1.5px] py-2 font-poppins text-sm text-slate-500 ${errField.year ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'year')}>
-                                        <option value='default' className='text-sm'>Select Year</option>
+                                        <option value='' className='text-sm'>Select Year</option>
                                         <option value='I' className='text-sm'>I</option>
                                         <option value='II' className='text-sm'>II</option>
                                         <option value='III' className='text-sm'>III</option>
@@ -238,20 +259,33 @@ export const AddBatchPage = () => {
                                     <p className='text-xs mt-1 text-red-400'>{errField.year ? 'Select any option' : ''}</p>
                                 </div>
                             </div>
-                            <div className='flex flex-col'>
-                                <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5">Semester</label>
-                                <select type='text' className={`rounded-md bg-gray-50 border-[1.5px] py-2 font-poppins text-sm text-slate-500 ${errField.semester ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'semester')}>
-                                    <option value='default' className='text-sm'>Select Semester</option>
-                                    <option value='1 SEM' className='text-sm'>1 SEM</option>
-                                    <option value='2 SEM' className='text-sm'>2 SEM</option>
-                                    <option value='3 SEM' className='text-sm'>3 SEM</option>
-                                    <option value='4 SEM' className='text-sm'>4 SEM</option>
-                                    <option value='5 SEM' className='text-sm'>5 SEM</option>
-                                    <option value='6 SEM' className='text-sm'>6 SEM</option>
-                                    <option value='7 SEM' className='text-sm'>7 SEM</option>
-                                    <option value='8 SEM' className='text-sm'>8 SEM</option>
-                                </select>
-                                <p className='text-xs mt-1 text-red-400'>{errField.semester ? 'Select any option' : ''}</p>
+                            <div className='flex flex-wrap justify-between gap-x-3'>
+                                <div className='flex flex-col'>
+                                    <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5">Semester</label>
+                                    <select type='text' className={`rounded-md bg-gray-50 border-[1.5px] py-2 font-poppins text-sm text-slate-500 ${errField.semester ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'semester')}>
+                                        <option value='' className='text-sm'>Select Semester</option>
+                                        <option value='1 SEM' className='text-sm'>1 SEM</option>
+                                        <option value='2 SEM' className='text-sm'>2 SEM</option>
+                                        <option value='3 SEM' className='text-sm'>3 SEM</option>
+                                        <option value='4 SEM' className='text-sm'>4 SEM</option>
+                                        <option value='5 SEM' className='text-sm'>5 SEM</option>
+                                        <option value='6 SEM' className='text-sm'>6 SEM</option>
+                                        <option value='7 SEM' className='text-sm'>7 SEM</option>
+                                        <option value='8 SEM' className='text-sm'>8 SEM</option>
+                                    </select>
+                                    <p className='text-xs mt-1 text-red-400'>{errField.semester ? 'Select any option' : ''}</p>
+                                </div>
+                                <div className='flex flex-col'>
+                                    <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5">Regulation</label>
+                                    <select type='text' className={`rounded-md bg-gray-50 border-[1.5px] py-2 font-poppins text-sm text-slate-500 ${errField.regulation ? 'border-red-500' : ''} outline-none pl-3 p-1 mt-1 w-80`} onChange={(e) => handleInputData(e, 'regulation')}>
+                                        <option value='' className='text-sm'>Select Regulation</option>
+                                        <option value='R17' className='text-sm'>R 17</option>
+                                        <option value='R21' className='text-sm'>R 21</option>
+                                        <option value='R26' className='text-sm'>R 26</option>
+                                        <option value='R30' className='text-sm'>R 30</option>
+                                    </select>
+                                    <p className='text-xs mt-1 text-red-400'>{errField.regulation ? 'Select any option' : ''}</p>
+                                </div>
                             </div>
                             <div className='flex flex-col'>
                                 <label className="font-medium text-slate-600 font-inter text-sm tracking-tight mt-5 mb-3">Upload student list</label>
@@ -298,10 +332,9 @@ export const AddBatchPage = () => {
                                 <Link to="/main/students/list" className='bg-gray-200 flex font-inter tracking-tight text-xs justify-center px-10 py-3'>Cancel</Link>
 
                                 <button
-                                    className={`bg-blue-500 font-inter text-white rounded-sm text-xs tracking-tight px-10 py-3 ${isCreateButtonDisabled ? 'opacity-100 cursor-not-allowed' : ''
+                                    className={`bg-blue-500 font-inter text-white rounded-sm text-xs tracking-tight px-10 py-3 ${btnLoading ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
                                         }`}
-                                    onClick={handleBatchAdd}
-                                >
+                                    onClick={handleBatchAdd}>
                                     Save & Create
                                 </button>
                             </div>
