@@ -1,21 +1,24 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
+import { signInUser } from "../../../apis/auth/login";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSignInUser = () => {
-        window.location.href = '/v1/auth/forgot-password'
+        console.log(email, password);
+        signInUser(email, password);
+        // window.location.href = '/v1/auth/forgot-password'
     }
 
     const handleEmailInput = (e) => {
-        console.log(e);
+        setEmail(e);
         
     }
     
     const handlePasswordInput = (e) => {
-        console.log(e)
+        setPassword(e)
     }
     return (
         <div className="w-screen flex">
@@ -31,18 +34,18 @@ export const Login = () => {
                     <h6>Login</h6>
                     <div className="mt-8">
                         <label>Email</label>
-                        <input type="email" id="email" name="email" className="mt-1" />
+                        <input type="email" id="email" name="email" className="mt-1"  onChange={(e)=>handleEmailInput(e.target.value)}/>
                     </div>
 
                     <div className="mt-7">
                         <label>Password</label>
-                        <input type="password" id="password" name="password" className="mt-1" onChange={(e)=>handleEmailInput(e.target.value)} />
+                        <input type="password" id="password" name="password" className="mt-1" onChange={(e)=>handlePasswordInput(e.target.value)} />
                     </div>
 
                     <div className="flex justify-between mt-5 mb-5">
                         <div>
                             <label className="flex items-center gap-2">
-                                <input type="checkbox" className="border-2 border-[#DDDDDD]" onChange={(e)=>handlePasswordInput(e.target.value)}/> Remember Me
+                                <input type="checkbox" className="border-2 border-[#DDDDDD]"/> Remember Me
                             </label>
                         </div>
 
@@ -52,7 +55,7 @@ export const Login = () => {
                     </div>
 
                     <div>
-                        <button className={`loading`} onClick={handleSignInUser}>Sign In</button>
+                        <button className={``} onClick={handleSignInUser}>Sign In</button>
                     </div>
                 </div>
             </div>
