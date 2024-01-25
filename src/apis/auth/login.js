@@ -1,23 +1,23 @@
-import bcrypt from 'bcryptjs'
+import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
 export const signInUser = async (email, password) => {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
+  try {
+    const data = { email: email.toLowerCase(), password };
+    const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), import.meta.env.VITE_CRYPTO_SECRET_KEY).toString();
 
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const response = await axios.post('http://localhost:3035/api/v1/auth/login', {
+      data: cipherText
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-    fetch('http://localhost:3035/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, password: password })
-    }).then((res) => { return res.json() })
-        .then((data) => {
-            console.log(data);
-        })
-        .catch((err) => {
-            console.error(err);
-        })
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error during sign in');
+  }
+};
 
-}

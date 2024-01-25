@@ -12,6 +12,7 @@
 
     --primary-color: #1443E8;
     --secondary-color: #1E2334;
+    --dark: #464D5E;
     --light-dark: #DDDDDD;
     --lightest-dark: #F0EEEE;
     --white: #ffff;
@@ -46,8 +47,10 @@ input {
     background-color: var(--lightest-dark);
     border: 2px solid var(--light-dark);
     outline: none;
+    color: var(--dark) !important;
     padding-left: 14px !important;
     font-family: var(--font-manrope) !important;
+    font-size: var(--text-para);
 }
 
 input[type="checkbox"] {
@@ -80,4 +83,17 @@ a:hover {
 .loading {
     background-color:#7AA2FF !important;
     cursor: not-allowed;
+}
+
+span {
+    font-family: var(--font-sen);
+    letter-spacing: var(--letter-spacing--1);
+}
+
+p {
+    font-family: var(--font-sen);
+    font-weight: var(--font-normal);
+    color: var(--dark);
+    line-height: 18px;
+    letter-spacing: var(--letter-spacing--1);
 }
