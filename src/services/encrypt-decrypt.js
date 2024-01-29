@@ -6,7 +6,7 @@ export const encryptData = (data)=> {
 }
 
 export const decryptData = (cipherText) => {
-    const bytes = CryptoJS.AES.decrypt(cipherText, import.meta.env.CRYPTO_SECRET_KEY);
+    const bytes = CryptoJS.AES.decrypt(cipherText, import.meta.env.VITE_CRYPTO_SECRET_KEY);
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     return decryptedData
 }

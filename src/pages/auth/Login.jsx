@@ -1,22 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { signInUser } from "../../apis/auth/Login"; 
+import { signInUser } from "../../apis/auth/Login";
+import { useDispatch } from "react-redux";
+import { loggedIn } from '../../redux/actions/authActions'
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isProgress, setIsProgress] = useState(false);
     const [message, setMessage] = useState({});
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSignInUser = async () => {
         try {
             setIsProgress(true);
+            if(email == '' || password == ''){
+                setIsProgress(false)
+                return setMessage({success: false, message: "Please enter valid email or password"});
+            }
             const result = await signInUser(email, password);
 
             if (result.data.success) {
                 setMessage(result.data);
-                setTimeout(()=>{
-                    window.location.href = "/web";
+                setTimeout(() => {
+                    window.location.href = "/web"
                 }, 1000);
             } else {
                 setMessage(result.data);
@@ -25,7 +33,7 @@ export const Login = () => {
         } catch (error) {
             console.error(error);
             setIsProgress(false);
-            setMessage('Error signing in. Please try again.');
+            setMessage({success: false, message:'Error signing in. Please try again.'});
         }
     };
 
@@ -55,12 +63,12 @@ export const Login = () => {
                     </div>
                     <div className="mt-3">
                         <label>Email</label>
-                        <input type="email" id="email" name="email" className="mt-1" onChange={(e) => handleEmailInput(e.target.value)} />
+                        <input type="email" id="email" name="email" className="mt-1 w-[400px] border-2" onChange={(e) => handleEmailInput(e.target.value)} />
                     </div>
 
                     <div className="mt-7">
                         <label>Password</label>
-                        <input type="password" id="password" name="password" className="mt-1" onChange={(e) => handlePasswordInput(e.target.value)} />
+                        <input type="password" id="password" name="password" className="mt-1 w-[400px] border-2" onChange={(e) => handlePasswordInput(e.target.value)} />
                     </div>
 
                     <div className="flex justify-between mt-5 mb-5">
@@ -71,12 +79,12 @@ export const Login = () => {
                         </div>
 
                         <div>
-                            <Link to={'/v1/auth/forgot-password'}>Forgot Password</Link>
+                            <Link to={'/v1/auth/forgot-password'} className="text-blue-600 tracking-tighter">Forgot Password</Link>
                         </div>
                     </div>
 
                     <div>
-                        <button className={isProgress ? "loading" : ""} onClick={handleSignInUser}>Sign In</button>
+                        <button className={`${isProgress ? "loading" : ""} w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleSignInUser}>{isProgress ? 'Singing in you...' : 'Sign In'}</button>
                     </div>
                 </div>
             </div>
