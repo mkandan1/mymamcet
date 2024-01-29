@@ -11,7 +11,7 @@ export const forgotPassword = async (email) => {
 
         const data = { email: email };
         const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/forgot-password`, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/mamcet/auth/forgot-password`, {
             data: cipherText
         });
 

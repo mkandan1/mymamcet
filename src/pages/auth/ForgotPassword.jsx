@@ -47,11 +47,11 @@ export const ForgotPassword = () => {
                     <div className="flex flex-col gap-y-7">
                         <div className="mt-8">
                             <label>Email</label>
-                            <input type="email" id="email" name="email" className="mt-1" onChange={(e) => handleEmailInput(e.target.value)} />
+                            <input type="email" id="email" name="email" className="mt-1 w-[400px] border-2" onChange={(e) => handleEmailInput(e.target.value)} />
                         </div>
 
                         <div>
-                            <button className={isProgress ? "loading" : ""} onClick={handleForgotPassword}>Reset Password</button>
+                        <button className={`${isProgress ? "loading" : ""} w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleForgotPassword}>{isProgress ? 'Sending you a email' : 'Forgot Password'}</button>
                         </div>
                     </div>
                 </div>

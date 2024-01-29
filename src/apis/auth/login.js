@@ -6,7 +6,7 @@ export const signInUser = async (email, password) => {
     const data = { email: email.toLowerCase(), password };
     const cipherText = CryptoJS.AES.encrypt(JSON.stringify(data), import.meta.env.VITE_CRYPTO_SECRET_KEY).toString();
 
-    const response = await axios.post('http://localhost:3035/api/v1/auth/login', {
+    const response = await axios.post('http://localhost:3035/api/v1/mamcet/auth/login', {
       data: cipherText
     }, {
       headers: {
