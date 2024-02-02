@@ -10,12 +10,25 @@ import { EmployeesOnboarding } from './pages/employees/EmployeesOnboarding';
 import { authorization } from './apis/auth/authorization';
 import { useDispatch, useSelector } from 'react-redux';
 import { MyProfile } from './pages/accounts/MyProfile';
+import { Settings } from './pages/accounts/Settings';
 import { Course } from './pages/courses/Course';
+import { SubjectMapping } from './pages/courses/SubjectMapping';
 import { Employees } from './pages/employees/Employees';
+import { Notifications } from './pages/accounts/Notification';
+import { NewCourses } from './pages/courses/NewCourses';
+import { EditCourses } from './pages/courses/EditCourse';
+import { Subjects } from './pages/courses/Subjects';
+import { Icon } from '@iconify/react';
+import { NewSubject } from './pages/courses/NewSubject';
+import { EditSubject } from './pages/courses/EditSubject';
+import { Students } from './pages/students/Students';
+import { Batches } from './pages/courses/Batch';
+import { NewBatch } from './pages/courses/NewBatch';
+import { EditBatch } from './pages/courses/EditBatch';
 
 function App() {
   const [showHeaderAndNavigation, setShowHeaderAndNavigation] = useState(true);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const [loggedIn, setLoggedIn] = useState(useSelector((state) => state.auth.loggedin));
 
@@ -34,8 +47,6 @@ function App() {
       }
     };
 
-    console.log(loggedIn);
-
     checkAuth();
   }, [loggedIn]);
 
@@ -51,7 +62,9 @@ function App() {
 
   if (loading) {
     // Render loading indicator here
-    return <div>Loading...</div>;
+    return <div className='w-screen h-screen flex justify-center items-center'>
+      <Icon icon={'eos-icons:three-dots-loading'} className='text-8xl'/>
+    </div>;
   }
 
   return (
@@ -64,8 +77,18 @@ function App() {
           <Route path="/web/user/profile" element={<MyProfile />} />
           <Route path="/web/admissions/registry" element={<Course />} />
           <Route path="/web/courses/all" element={<Course />} />
-          <Route path="/web/courses/subject-mapping" element={<Course />} />
-          <Route path="/web/settings" element={<Course />} />
+          <Route path="/web/courses/course/new" element={<NewCourses />} />
+          <Route path="/web/courses/course/:id" element={<EditCourses />} />
+          <Route path="/web/courses/subjects" element={<Subjects />} />
+          <Route path="/web/courses/batches" element={<Batches />} />
+          <Route path="/web/courses/batches/batch/new" element={<NewBatch />} />
+          <Route path="/web/courses/batches/batch/:id" element={<EditBatch />} />
+          <Route path="/web/courses/subjects/subject/new" element={<NewSubject />} />
+          <Route path="/web/courses/subjects/subject/:id" element={<EditSubject />} />
+          <Route path="/web/students/all" element={<Students />} />
+          <Route path="/web/courses/subject-mapping" element={<SubjectMapping />} />
+          <Route path="/web/settings" element={<Settings />} />
+          <Route path="/web/notifications" element={<Notifications />} />
         </Routes>
       ) : (
         <Routes>

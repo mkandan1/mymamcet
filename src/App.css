@@ -20,7 +20,8 @@
 }
 
 body {
-    overflow-y: auto !important;
+    overflow-y: hidden !important;
+    overflow-x: hidden;
 }
 
 .bg-primary-color {

@@ -10,7 +10,6 @@ export const Login = () => {
     const [isProgress, setIsProgress] = useState(false);
     const [message, setMessage] = useState({});
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const handleSignInUser = async () => {
         try {
@@ -24,7 +23,7 @@ export const Login = () => {
             if (result.data.success) {
                 setMessage(result.data);
                 setTimeout(() => {
-                    window.location.href = "/web"
+                    window.history.back();
                 }, 1000);
             } else {
                 setMessage(result.data);

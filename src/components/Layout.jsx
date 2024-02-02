@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
 
 
   return (
-    <div className='grid grid-cols-12 grid-rows-12 relative'>
+    <div className='grid grid-cols-12 grid-rows-12'>
       <Header>
         {children}
       </Header>
