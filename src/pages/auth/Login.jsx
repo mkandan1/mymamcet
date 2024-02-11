@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { signInUser } from "../../apis/auth/Login";
+import { Auth } from "../../apis/auth/Auth";
 import { useDispatch } from "react-redux";
-import { loggedIn } from '../../redux/actions/authActions'
+import { setLoggedIn } from "../../redux/actions/authActions";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -10,30 +10,30 @@ export const Login = () => {
     const [isProgress, setIsProgress] = useState(false);
     const [message, setMessage] = useState({});
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const handleSignInUser = async () => {
         try {
             setIsProgress(true);
-            if(email == '' || password == ''){
+            if (email == '' || password == '') {
                 setIsProgress(false)
-                return setMessage({success: false, message: "Please enter valid email or password"});
+                return setMessage({ success: false, message: "Please enter valid email or password" });
             }
-            const result = await signInUser(email, password);
+            const result = await Auth.signInWithEmailAndPassword({ email, password });
 
-            if (result.data.success) {
-                setMessage(result.data);
+            if (result.success) {
+                setMessage(result);
+                console.log(result.message);
                 setTimeout(() => {
-                    window.location.href = "/web"
+                        dispatch(setLoggedIn({user: result.user}))
                 }, 1000);
             } else {
-                setMessage(result.data);
+                setMessage(result);
             }
             setIsProgress(false);
         } catch (error) {
             console.error(error);
             setIsProgress(false);
-            setMessage({success: false, message:'Error signing in. Please try again.'});
+            setMessage({ success: false, message: 'Error signing in. Please try again.' });
         }
     };
 

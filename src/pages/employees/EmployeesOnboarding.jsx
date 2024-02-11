@@ -6,7 +6,6 @@ import { showNotification } from '../../redux/actions/notification';
 import { addEmployeesToDB } from '../../apis/employee/employees';
 import { constants } from '../../constant/constant';
 import { savePhotoInFirebase } from '../../services/storeImages';
-import { authorization } from '../../apis/auth/authorization';
 import { useNavigate } from 'react-router-dom';
 
 export const EmployeesOnboarding = () => {

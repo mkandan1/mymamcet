@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"
-import { forgotPassword } from "../../apis/auth/forgot-password";
 
 export const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -14,16 +13,16 @@ export const ForgotPassword = () => {
 
     const handleForgotPassword = async () => {
         setIsProgress(true);
-        const result =  await forgotPassword(email);
+        // const result =  await forgotPassword(email);
         
-        if (result.success) {
-            setMessage(result);
-            setIsProgress(false);
-        }
-        else {
-            setMessage(result);
-            setIsProgress(false);
-        }
+        // if (result.success) {
+        //     setMessage(result);
+        //     setIsProgress(false);
+        // }
+        // else {
+        //     setMessage(result);
+        //     setIsProgress(false);
+        // }
     }
 
     return (

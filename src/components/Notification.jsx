@@ -16,7 +16,7 @@ const Notification = () => {
 
     return (
         <div
-            className={`absolute bottom-10 w-80 right-5 z-20 p-4 mb-4 mr-4 font-sen ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white rounded-md`}
+            className={`absolute bottom-10 w-80 right-5 z-20 tracking-tighter p-4 mb-4 mr-4 font-sen ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white rounded-md`}
             style={{ display: show ? 'block' : 'none' }}
         >
             {message}
