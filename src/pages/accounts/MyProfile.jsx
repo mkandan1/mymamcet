@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Layout } from '../../components/Layout';
-import { useSelector, useDispatch } from 'react-redux';// Import your Redux action
-import { logOutUser } from '../../apis/auth/authorization';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { savePhotoInFirebase } from '../../services/storeImages';
-import { changeProfilePhoto } from '../../apis/auth/accounts';
+import { Auth } from '../../apis/auth/Auth';
 import { showNotification } from '../../redux/actions/notification';
 import { Icon } from '@iconify/react';
 
@@ -12,8 +11,6 @@ export const MyProfile = () => {
   const dispatch = useDispatch();
   const user = useState(useSelector((state) => (state.auth.user).user))[0];
   const fileInputRef = useRef(null);
-  const [photoType, setPhotoType] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
   const navigate = useNavigate();
@@ -49,7 +46,8 @@ export const MyProfile = () => {
       setSelectedImage(reader.result);
       const type = reader.result.split(';')[0].split(':')[1];
       const url = await savePhotoInFirebase(file, user.email, type);
-      const result = await changeProfilePhoto(url);
+      console.log(url);
+      const result = await Auth.changeProfilePhoto( url);
       if (result.success) {
         dispatch(showNotification({ type: "success", message: "Profile photo updated successfully" }))
         setIsLoading(false);

@@ -1,6 +1,6 @@
 export const generateAcademicYears = (batchYear) => {
-    const startYear = batchYear.split(' - ')[0];
-    const endYear = batchYear.split(' - ')[1];
+    const startYear = batchYear.split('-')[0];
+    const endYear = batchYear.split('-')[1];
     let academicYears = [];
     for (let year = Number(startYear); year < endYear; year++) {
         const academicYearStart = year;

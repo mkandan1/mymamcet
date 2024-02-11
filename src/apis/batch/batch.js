@@ -1,80 +1,83 @@
 import axios from "axios";
 import { encryptData } from '../../services/encrypt-decrypt'
+import { API } from "../constant/api";
 
-export const getQueries = async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/batch/query`, {
-            withCredentials: true
+export class Batch {
+    static getQueries = async () => {
+        try {
+            const response = await API.getRequest('/batch/query'); 
+            return response
+        }
+        catch (err) {
+            console.error(err);
+            return { success: false, message: "Something went wrong! Please try again" }
+        }
+    }
+
+    static addBatch = async (data) => {
+        return new Promise(async(resolve, reject)=> {
+            try{
+                const batchResult = await API.postRequest('/batch/add', data);
+                if(batchResult.success){
+                    resolve(batchResult)
+                }
+                else{
+                    reject(batchResult)
+                }
+            }
+            catch(err){
+                console.log(err);
+                reject(err.response.data)
+            }
+        }) 
+    }
+    static getAllBatches = async () => {
+        return new Promise(async(resolve, reject)=> {
+            const batchResult = await API.getRequest('/batch/all');
+            if(batchResult.success){
+                resolve(batchResult)
+            }
+            else{
+                reject(batchResult)
+            }
         })
-
-        const result = response.data
-        return result
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
 
-export const addBatch = async (data) => {
-    try {
-        const cipherText = encryptData(data)
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/batch/add`, { data: cipherText }, {
-            withCredentials: true
+    static editBatchDetails = async (data) => {
+        return new Promise(async(resolve, reject)=> {
+            const batchResult = await API.putRequest('/batch/edit', data);
+            if(batchResult.success){
+                resolve(batchResult)
+            }
+            else{
+                reject(batchResult)
+            }
+        }) 
+    }
+    
+    static getBatchDetails = async (id) => {
+        return new Promise(async(resolve, reject)=> {
+            const batchResult = await API.getRequest('/batch/'+id);
+            if(batchResult.success){
+                resolve(batchResult)
+            }
+            else{
+                reject(batchResult)
+            }
         })
-
-        const result = response.data
-        return result
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: err.response.data.message }
-    }
-}
-
-export const getAllBatches = async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/batch/all`, {
-            withCredentials: true
-        })
-
-        const result = response.data
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
-
-export const getBatchDetails = async (id) => {
-    try {
-        const cipherText = encryptData({id: id});
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/batch/details`,{data: cipherText}, {
-            withCredentials: true
-        })
-
-        const result = response.data
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
-
-export const updateBatchDetails = async (data) => {
-    try {
-        const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/batch/update`,{data: cipherText}, {
-            withCredentials: true
-        })
-
-        const result = response.data
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
+    
+    static updateBatchDetails = async (data) => {
+        try {
+            const cipherText = encryptData(data);
+            const response = await API.putRequest('/batch.')
+    
+            const result = response.data
+            return result
+        }
+        catch (err) {
+            console.error(err);
+            return { success: false, message: "Something went wrong! Please try again" }
+        }
     }
 }

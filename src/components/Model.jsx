@@ -1,20 +1,20 @@
-import React from 'react'
-import { LayoutHeader } from './LayoutHeader'
-import { Icon } from '@iconify/react'
+import React from 'react';
+import { LayoutHeader } from './LayoutHeader';
+import { Icon } from '@iconify/react';
 
 export const Model = ({ title, show, rows, cols, children, onClose }) => {
     return (
-        <div className={`${show ? '' : 'hidden'} grid grid-cols-${cols} rounded-md grid-rows-${rows} col-span-${cols} row-span-${rows} absolute right-0 left-0 top-0 bottom-0 bg-black items-center px-20 bg-opacity-30 z-50`}>
-            <div className={`grid grid-cols-${cols} grid-rows-${rows - 5} row-span-${rows} bg-white col-span-${cols} border`}>
-                <div className={`col-span-${cols} border flex items-center justify-between p-2 px-8`}>
-                    <h3 className={`col-span-${cols} font-manrope text-blue-500`}>{title}</h3>
-                    <Icon icon={'solar:close-square-linear'} className='cursor-pointer text-2xl' onClick={onClose}/>
+        <div className={`model-container ${show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} fixed inset-0 flex items-center justify-center transition-opacity duration-300 z-10`}>
+            <div className="model-overlay absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
+            <div className={`model-dialog bg-white rounded-lg shadow-lg p-6 w-full h-screen transform transition-transform duration-300 ${show ? 'translate-y-0' : '-translate-y-full'}`}>
+                <div className="model-header border-b border-gray-300 flex items-center justify-between p-2 px-8">
+                    <h3 className="font-manrope text-blue-500">{title}</h3>
+                    <Icon icon={'mdi:close-box'} className='cursor-pointer text-2xl text-gray-500' onClick={onClose} />
                 </div>
-
-                <div className={`grid grid-cols-${cols} grid-rows-${rows} col-span-${cols} row-span-${rows} mt-4`}>
+                <div className={`mt-4 h-screen pb-20 overflow-auto custom-scrollbar`}>
                     {children}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

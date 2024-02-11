@@ -1,5 +1,6 @@
 import axios from "axios";
 import { encryptData } from "../../services/encrypt-decrypt";
+import { API } from "../constant/api";
 
 export const fetchQueries = async(program, department) => {
     try{
@@ -21,8 +22,11 @@ export const addSemester = async (data) => {
         const cipherText = encryptData(data)
         const response = axios.post(`${import.meta.env.VITE_API_URL}/api/v1/semester/add`, {data: cipherText}, {withCredentials: true});
         const result = response.data
+        console.log(result);
+        return result
     }
     catch(err){
         console.error(err);
+        return result= {success: false, message: err.response.data.message}
     }
 }

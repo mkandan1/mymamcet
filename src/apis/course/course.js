@@ -1,78 +1,59 @@
 import axios from "axios"
 import { decryptData, encryptData } from '../../services/encrypt-decrypt'
+import { API } from "../constant/api";
 
-export const addNewCourse = async (data) => {
-    try {
-        const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/course/add`, {data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
+export class CourseServices {
+    static async addNewCourse(data) {
+        const newCourseReslt = await API.postRequest('/course/add', data);
+        return newCourseReslt
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
 
-export const getAllCourse = async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/course/all`, {
-            withCredentials: true
-        });
-        const result = response.data;
-        result.data = decryptData(result.data)
-        return result
+    static async getAllCourse(){
+        return new Promise(async(resolve, reject)=> {
+            const coursesResult = await API.getRequest('/course/all');
+            if(coursesResult.success){
+                resolve(coursesResult);
+            }
+            else{
+                reject(coursesResult)
+            }
+        })
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
+    static async getCourseDetails(courseId){
+        return new Promise(async(resolve, reject)=> {
+            const courseDetailResult = await API.getRequest('/course/'+courseId);
+            if(courseDetailResult){
+                resolve(courseDetailResult)
+            }
+            else{
+                reject(courseDetailResult)
+            }
+        })
     }
-}
 
-export const getCourseDetails = async(courseId) => {
-    try {
-        const cipherText = encryptData(courseId);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/course/details`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        result.data = decryptData(result.data)
-        return result
+    static async deleteCourse(courseId){
+        return new Promise(async(resolve, reject)=> {
+            const courseDeletionResult = await API.deleteRequest('/course', courseId);
+            
+            if(courseDeletionResult.success){
+                resolve(courseDeletionResult)
+            }
+            else{
+                reject(courseDeletionResult)
+            }
+        })
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
 
-export const editCourseDetails = async(data) => {
-    try {
-        const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/course/edit`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
+    static async editCourse(course){
+        return new Promise(async(resolve, reject)=> {
+            const editCourseResult = await API.putRequest('/course/edit', course);
 
-export const deleteCourse = async(courseId) => {
-    try {
-        const cipherText = encryptData(courseId);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/course/delete`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
+            if(editCourseResult.success){
+                resolve(editCourseResult)
+            }
+            else{
+                reject(editCourseResult)
+            }
+        })
     }
 }

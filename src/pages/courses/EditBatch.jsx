@@ -9,7 +9,7 @@ import { CustomCreateSelect } from '../../components/CustomSelect'
 import * as XLSX from 'xlsx';
 import { Select } from '../../components/Select';
 import { Input } from '../../components/Input';
-import { addBatch, getBatchDetails, getQueries, updateBatchDetails } from '../../apis/batch/batch';
+import { Batch } from '../../apis/batch/batch';
 import { LayoutHeader } from '../../components/LayoutHeader';
 import { FormLayout } from '../../components/FormLayout';
 import { SectionLayout } from '../../components/SectionLayout';
@@ -18,6 +18,10 @@ import { ButtonLayout } from '../../components/ButtonLayout';
 import { TableLayout } from '../../components/TableLayout';
 import { Button } from '../../components/Button';
 import { FileInput } from '../../components/FileInput';
+import { LogPopupModel } from '../../components/LogPopupModel';
+import { Queries } from '../../apis/queries/queries';
+import { getID } from '../../services/getID';
+import { isDataModified } from '../../services/isDataModified';
 
 export const EditBatch = () => {
     const [batchName, setBatchName] = useState('');
@@ -26,17 +30,17 @@ export const EditBatch = () => {
     const [department, setDepartment] = useState('');
     const [courseName, setCourseName] = useState('');
     const [regulation, setRegulation] = useState('');
-    const [fetchedBatch, setFetchedBatch] = useState();
     const [program, setProgram] = useState('');
     const [students, setStudents] = useState([]);
+    const batchId = getID();
     const [studentsData, setStudentsData] = useState(null);
-    const [regulations, setRegulations] = useState(['R 21', 'R 17']);
+    const [regulations, setRegulations] = useState([]);
     const [semesters, setSemesters] = useState(['1 SEM', '2 SEM', '3 SEM', '4 SEM', '5 SEM', '6 SEM', '7 SEM', '8 SEM']);
     const [departments, setDepartments] = useState(['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']);
     const [coursesName, setCoursesName] = useState([]);
     const [programs, setPrograms] = useState(['Undergraduate', 'Postgraduate']);
     const [academicYears, setAcademicYears] = useState([]);
-    const [years, setYears] = useState(['I YEAR', 'II YEAR', 'III YEAR', 'IV YEAR']);
+    const [fetchedBatch, setFetchedBatch] = useState([])
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -45,77 +49,56 @@ export const EditBatch = () => {
         { label: 'Register Number', field: 'registerNumber' },
         { label: 'Name', field: 'name' },
         { label: 'Date Of Birth', field: 'dob' },
+        { label: 'Phone', field: 'phone' },
+        { label: 'Father\'s name', field: 'fathersName' },
+        { label: 'Mother\'s name', field: 'mothersName' },
+        { label: 'Address', field: 'address' },
+        { label: '10th Mark', field: '_10thMark' },
+        { label: '12th Mark', field: '_12thMark' },
     ];
 
     useEffect(() => {
-        const fetchQueries = async () => {
-            const queriesResult = await getQueries();
-
-            if (queriesResult.success) {
-                setCoursesName(queriesResult.data.courseNames)
-                const fetchedAcademicYears = queriesResult.data.academicYears;
-                const options = fetchedAcademicYears.map((option) => ({ label: option, value: option }));
-                setAcademicYears(options)
-
-                const paths = new URL(window.location).pathname;
-                const arrayOfPath = paths.split('/')
-                const id = arrayOfPath[arrayOfPath.length - 1];
-                const batchResult = await getBatchDetails(id);
-                if (batchResult) {
-                    console.log(batchResult);
-                    setBatchName(batchResult.data.batchName);
-                    setSemester(batchResult.data.semester);
-                    setAcademicYear({label: batchResult.data.academicYear, value: batchResult.data.academicYear});
-                    setDepartment(batchResult.data.department);
-                    setCourseName(batchResult.data.courseName);
-                    console.log(batchResult.data.department);
-                    setProgram(batchResult.data.program);
-                    setStudentsData(batchResult.data.students)
-                    setFetchedBatch(batchResult.data);
-                    dispatch(showNotification({ type: "success", message: batchResult.message }))
-                }
-                else{
-                    dispatch(showNotification({ type: "error", message: batchResult.message }))   
-                }
-            }
-            else {
-                dispatch(showNotification({ type: "error", message: queriesResult.message }))
-            }
-        }
-        fetchQueries();
+        const query = [{ collectionName: "courses", fields: ["regulation"] }]
+        Queries.getQueries(query)
+            .then((data) => setRegulations(data.queries.regulation))
+            .catch((err) => dispatch(showNotification({ type: "error", message: err.message })))
+        Batch.getBatchDetails(batchId).then((result) => {
+            setBatchName(result.batch.batchName);
+            setSemester(result.batch.semester);
+            setAcademicYear(result.batch.academicYear);
+            setRegulation(result.batch.regulation)
+            setDepartment(result.batch.department);
+            setCourseName(result.batch.courseName);
+            setProgram(result.batch.program);
+            setStudents(result.batch.students)
+            setFetchedBatch(result.batch);
+            console.log(students);
+        })
     }, []);
 
-
-    const isDataModified = () => {
-        return (
-            batchName !== fetchedBatch.batchName ||
-            semester !== fetchedBatch.semester ||
-            academicYear !== fetchedBatch.academicYear ||
-            department !== fetchedBatch.department ||
-            courseName !== fetchedBatch.courseName ||
-            program !== fetchedBatch.program
-        )
-    }
-
+    useEffect(() => {
+        const query = [{ collectionName: "courses", values: { program, department, regulation }, responseFormat: ["courseName"] }]
+        Queries.getDocuments(query)
+            .then((data) => setCoursesName(data.options.courseName))
+    }, [regulation, department])
     const handleSubmit = async () => {
         if (!batchName || !semester || !academicYear || !department || !course || !studentsData) {
             dispatch(showNotification({ type: 'error', message: 'Please fill in all fields before submitting' }));
             return;
         }
 
-        const isDataModifiedOrNot = isDataModified()
+        const data = { _id: fetchedBatch._id, batchName, semester, academicYear, department, course, program, regulation, students, studentsData };
 
-        if(!isDataModifiedOrNot){
+        if (!isDataModified(data, fetchedBatch)) {
             dispatch(showNotification({ type: "error", message: "No chnages were found" }))
-            return 
+            return
         }
 
         const paths = new URL(window.location).pathname;
         const arrayOfPath = paths.split('/')
         const id = arrayOfPath[arrayOfPath.length - 1];
-        const data = { id: fetchedBatch._id, batchName, semester, academicYear: academicYear.value, department, course, program, students, studentsData };
-       
-        const result = await updateBatchDetails(data);
+
+        Batch.editBatchDetails(data)
         if (result.success) {
             dispatch(showNotification({ type: 'success', message: result.message }));
             navigate('/web/courses/batches');
@@ -176,10 +159,10 @@ export const EditBatch = () => {
 
     return (
         <Layout>
-            <LayoutHeader title={'Edit Batch'}/>
-            <FormLayout rows={10} cols={12}>
+            <LayoutHeader title={'Edit Batch'} />
+            <FormLayout rows={8} cols={12}>
                 <SectionLayout title={'Batch Information'} />
-                <InputLayout rows={3} cols={12}>
+                <InputLayout rows={4} cols={12}>
                     <Input
                         value={batchName}
                         type={'text'}
@@ -197,13 +180,23 @@ export const EditBatch = () => {
                         onChange={(selectedOption) => setProgram(selectedOption)}
                         rowStart={2}
                         colStart={1}
-                    ></Select><Select
+                    ></Select>
+                    <Select
                         label={'Department'}
                         placeholder={'Select Department'}
                         options={departments}
                         value={department}
                         onChange={(selectedOption) => setDepartment(selectedOption)}
                         rowStart={3}
+                        colStart={1}
+                    ></Select>
+                    <Select
+                        label={'Regulation'}
+                        placeholder={'Select Regulation'}
+                        options={regulations}
+                        value={regulation}
+                        onChange={(selectedOption) => setRegulation(selectedOption)}
+                        rowStart={4}
                         colStart={1}
                     ></Select>
                     <Select
@@ -215,7 +208,7 @@ export const EditBatch = () => {
                         rowStart={1}
                         colStart={6}
                     ></Select>
-                    <CustomCreateSelect
+                    <Select
                         placeholder={'Select Academic Year'}
                         options={academicYears}
                         value={academicYear}
@@ -223,7 +216,7 @@ export const EditBatch = () => {
                         rowStart={2}
                         colStart={6}
                         label={'Academic Year'}
-                    ></CustomCreateSelect>
+                    ></Select>
 
                     <Select
                         placeholder={'Select Semester'}
@@ -236,17 +229,20 @@ export const EditBatch = () => {
                     ></Select>
 
                 </InputLayout>
-                <ButtonLayout>
-                    <FileInput bgColor={'blue-500'} textColor={'white'} id={'studentsFile'} accept={'.xlsx, .xls'} label={'Add all students'} icon={'uiw:file-excel'} onFileSelect={(file) => handleFileInputChange(file)} />
-                    <Button bgColor={'blue-500'} textColor={'white'} text={'Add individual student'} />
-                    <Button bgColor={'green-500'} textColor={'white'} text={'Save & Create'} onClick={() => handleSubmit()} />
-                    <Button bgColor={'white'} textColor={'gray-500'} text={'Cancel'} onClick={()=>navigate('/web/courses/batches')}/>
-                </ButtonLayout>
-                <SectionLayout title={'Students'} />
-                <TableLayout cols={12} rows={8}>
-                    <Table headers={headers} data={studentsData} className="col-span-12" />
+
+                <SectionLayout title={'Students'}>
+                    <ButtonLayout marginTop={'0'}>
+                        <FileInput bgColor={'blue-500'} textColor={'white'} id={'studentsFile'} accept={'.xlsx, .xls'} label={'Add all students'} icon={'uiw:file-excel'} onFileSelect={(file) => handleFileInputChange(file)} />
+                        <Button bgColor={'blue-500'} textColor={'white'} text={'Add individual student'} icon={'ph:student-duotone'} />
+                        <Button bgColor={'green-500'} textColor={'white'} text={'Save & Create'} icon={'material-symbols:save-outline'} onClick={() => handleSubmit()} />
+                        <Button bgColor={'white'} textColor={'gray-500'} text={'Cancel'} icon={'material-symbols:cancel-outline'} onClick={() => navigate('/web/courses/batches')} />
+                    </ButtonLayout>
+                </SectionLayout>
+                <TableLayout cols={12} rows={4}>
+                    <Table headers={headers} data={students} className="col-span-12" />
                 </TableLayout>
             </FormLayout>
+
 
         </Layout >
     );

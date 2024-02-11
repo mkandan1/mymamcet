@@ -1,79 +1,69 @@
 import axios from "axios";
-import { decryptData, encryptData } from "../../services/encrypt-decrypt";
+import { API } from '../constant/api'
 
-export const addSubject = async (data) => {
-    try {
-        const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/subject/add`, {data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
+export class SubjectServices {
+    static async addSubject(data) {
+        return new Promise(async (resolve, reject) => {
+            const addedSubjectResult = await API.postRequest('/subject/add', data);
 
-export const getAllSubjects = async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/subject/all`, {
-            withCredentials: true
-        });
-        const result = response.data;
-        result.data = decryptData(result.data)
-        return result
+            if (addedSubjectResult.success) {
+                resolve(addedSubjectResult)
+            }
+            else {
+                reject(addedSubjectResult)
+            }
+        })
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
 
+    static async getAllSubjects() {
+        return new Promise(async (resolve, reject) => {
+            const subjectsResult = await API.getRequest('/subject/all')
 
-export const getSubjectDetails = async(courseId) => {
-    try {
-        const cipherText = encryptData(courseId);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/subject/details`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        result.data = decryptData(result.data)
-        return result
+            if (subjectsResult.success) {
+                resolve(subjectsResult)
+            }
+            else {
+                reject(subjectsResult)
+            }
+        })
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
 
-export const editSubjectDetails = async(data) => {
-    try {
-        const cipherText = encryptData(data);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/subject/edit`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
-    }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
-    }
-}
+    static async deleteSubject(subjectId) {
+        return new Promise(async (resolve, reject) => {
+            const deletionResult = await API.deleteRequest('/subject', subjectId);
 
-export const deleteSubject = async(subjectId) => {
-    try {
-        const cipherText = encryptData(subjectId);
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/subject/delete`,{data: cipherText}, {
-            withCredentials: true
-        });
-        const result = response.data;
-        return result
+            if (deletionResult.success) {
+                resolve(deletionResult)
+            }
+            else {
+                reject(deletionResult)
+            }
+        })
     }
-    catch (err) {
-        console.error(err);
-        return { success: false, message: "Something went wrong! Please try again" }
+
+    static async getSubjectDetails(subjectId) {
+        return new Promise(async (resolve, reject) => {
+            const subjectResult = await API.getRequest('/subject/' + subjectId);
+
+            if (subjectResult.success) {
+                resolve(subjectResult)
+            }
+            else {
+                reject(subjectResult)
+            }
+        })
+    }
+
+    static async editSubject(subject) {
+        return new Promise(async (resolve, reject) => {
+            const editSubjectResult = await API.putRequest('/subject/edit', subject);
+
+            if (editSubjectResult.success) {
+                resolve(editSubjectResult)
+            }
+            else {
+                reject(editSubjectResult)
+            }
+        })
     }
 }

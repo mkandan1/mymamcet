@@ -4,9 +4,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../redux/actions/notification';
-import { editSubjectDetails, getSubjectDetails } from '../../apis/subject/subject'; // Import the function to fetch subject details
-
-import { CustomCreateSelect } from '../../components/CustomSelect';
+import { SubjectServices } from '../../apis/subject/subject';
 import { Input } from '../../components/Input';
 import { LayoutHeader } from '../../components/LayoutHeader';
 import { Select } from '../../components/Select';
@@ -15,130 +13,98 @@ import { InputLayout } from '../../components/InputLayout';
 import { FormLayout } from '../../components/FormLayout';
 import { Button } from '../../components/Button';
 import { ButtonLayout } from '../../components/ButtonLayout';
+import { isDataModified } from '../../services/isDataModified';
+import { getID } from '../../services/getID';
+import { LogPopupModel } from '../../components/LogPopupModel';
 
 export const EditSubject = () => {
     const paths = new URL(window.location).pathname;
-    const array = paths.split('/');
-    const subjectId = array[array.length - 1];
+    const subjectId = getID();
+    const [fetchedData, setData] = useState();
+    const [show, setShow] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     const [formValues, setFormValues] = useState({
         department: '',
         program: '',
-        regulation: '',
-        semester: '',
         subjectCode: '',
         subjectName: '',
-        subjectCredit: '',
-        isElective: false,
-        isMandatory: false,
+        subjectCredit: ''
     });
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchSubjectDetails = async () => {
-            try {
-                const fetchedSubjectDetails = await getSubjectDetails(subjectId);
-                const subjectDetails = fetchedSubjectDetails.data[0];
-                setFormValues((prevValues) => ({
-                    ...prevValues,
-                    program: subjectDetails.program,
-                    semester: subjectDetails.semester,
-                    department: { label: subjectDetails.department, value: subjectDetails.department },
-                    regulation: { label: subjectDetails.regulation, value: subjectDetails.regulation },
-                    subjectCode: subjectDetails.subjectCode,
-                    subjectName: subjectDetails.subjectName,
-                    subjectCredit: subjectDetails.subjectCredit
-                  }));          
-            } catch (error) {
-                console.error('Error fetching subject details:', error);
-                // Handle error, show error notification, etc.
-            }
-        };
+        const subjectId = getID();
+        SubjectServices.getSubjectDetails(subjectId)
+            .then((data) => { setFormValues(data.subject); setData(data.subject) })
+            .catch((err) => dispatch(showNotification({ type: "error", message: err.message })))
 
-        fetchSubjectDetails();
-    }, [subjectId]);
+    }, [subjectId, refresh]);
 
     const handleInputChange = (field, value) => {
         setFormValues((prevValues) => ({ ...prevValues, [field]: value }));
     };
 
-    const handleSubmit = async () => {
-        const { department, program, regulation, semester, subjectCode, subjectName, subjectCredit, isElective, isMandatory } = formValues;
+    const handleDelete = () => {
+        SubjectServices.deleteSubject(subjectId)
+            .then((data) => navigate('/web/courses/subjects'))
+            .catch((err) => dispatch(showNotification({type: "error", message: err.message})))
+    }
 
-        if (!department || !program || !regulation || !semester || !subjectCode || !subjectName || !subjectCredit) {
+    const handleSubmit = async () => {
+        const { department, program, subjectCode, subjectName, subjectCredit } = formValues;
+        console.log(formValues)
+        if (!department || !program || !subjectCode || !subjectName || !subjectCredit) {
             dispatch(showNotification({ type: 'error', message: 'Please fill in all fields before submitting' }));
             return;
         }
-
-        const data = { _id: subjectId, department: department.value, program, regulation: regulation.value, semester, subjectCode, subjectName, subjectCredit, isElective, isMandatory };
-        const result = await editSubjectDetails(data); // Use the appropriate function to update subject details
-
-        if (result.success) {
-            dispatch(showNotification({ type: 'success', message: result.message }));
-        } else {
-            dispatch(showNotification({ type: 'error', message: result.message }));
+        const data = { _id: subjectId, department, program, subjectCode, subjectName, subjectCredit };
+        console.log(isDataModified(formValues, fetchedData));
+        if (!isDataModified(formValues, fetchedData)) {
+            return dispatch(showNotification({ type: "error", message: "No changes were found" }))
         }
+        await SubjectServices.editSubject(data).then((data) => {
+            dispatch(showNotification({ type: 'success', message: data.message }));
+        }).catch((err) => {
+            dispatch(showNotification({ type: 'error', message: err.message }));
+        })
     };
 
     return (
         <Layout>
-            <LayoutHeader title={'New Subject'} />
+            <LayoutHeader title={'Edit Subject'} />
             <FormLayout rows={12} cols={12}>
                 <SectionLayout title={'Basic Information'} />
-                <InputLayout rows={3} cols={10}>
-                    <CustomCreateSelect
-                        placeholder={'Select Department'}
-                        value={formValues.department}
-                        onChange={(selectedOption) => handleInputChange('department', selectedOption)}
-                        options={[
-                            { label: 'CSE', value: 'CSE' },
-                            { label: 'IT', value: 'IT' },
-                            { label: 'ECE', value: 'ECE' },
-                            { label: 'EEE', value: 'EEE' },
-                            { label: 'MECH', value: 'MECH' },
-                            { label: 'CIVIL', value: 'CIVIL' }, { label: 'AIDS', value: 'AIDS' }
-                        ]}
-                        label={'Department'}
-                    />
+                <InputLayout rows={2} cols={10}>
                     <Select
                         label={'Program'}
                         options={['Undergraduate', 'Postgraduate']}
                         value={formValues.program}
                         placeholder={'Select program'}
                         onChange={(selectedOption) => handleInputChange('program', selectedOption)}
-                        rowStart={2}
-                        colStart={1}
-                    />
-                    <CustomCreateSelect
-                        placeholder={'Select Regulation'}
-                        value={formValues.regulation}
-                        options={[
-                            { label: 'R 21', value: 'R 21' },
-                            { label: 'R 17', value: 'R 17' }
-                        ]}
-                        onChange={(selectedOption) => handleInputChange('regulation', selectedOption)}
-                        label={'Regulation'}
-                        rowStart={3}
+                        rowStart={1}
                         colStart={1}
                     />
                     <Select
-                        label={'Semester'}
-                        options={['1 SEM', '2 SEM', '3 SEM', '4 SEM', '5 SEM', '6 SEM', '7 SEM', '8 SEM']}
-                        value={formValues.semester}
-                        placeholder={'Select semester'}
-                        onChange={(selectedOption) => handleInputChange('semester', selectedOption)}
+                        placeholder={'Select Department'}
+                        value={formValues.department}
+                        onChange={(selectedOption) => handleInputChange('department', selectedOption)}
+                        options={['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL', 'AIDS']}
+                        label={'Department'}
+                        rowStart={1}
+                        colStart={2}
                     />
                 </InputLayout>
                 <SectionLayout title={'Subject Details'} />
-                <InputLayout rows={1} cols={12} overflow={true}>
+                <InputLayout rows={3} cols={12} overflow={true}>
                     <Input
                         label={'Subject Code'}
                         value={formValues.subjectCode}
                         onChange={(e) => handleInputChange('subjectCode', e.target.value)}
                         rowStart={1}
                         colStart={1}
-                        inputColSize={2}
+                        inputColSize={3}
                     />
                     <Input
                         label={'Subject Name'}
@@ -146,19 +112,22 @@ export const EditSubject = () => {
                         onChange={(e) => handleInputChange('subjectName', e.target.value)}
                         rowStart={1}
                         colStart={6}
-                        inputColSize={2}
+                        inputColSize={3}
                     />
                     <Input
                         label={'Subject Credit'}
                         value={formValues.subjectCredit}
                         onChange={(e) => handleInputChange('subjectCredit', e.target.value)}
-                        rowStart={1}
-                        colStart={7}
-                        inputColSize={2}
+                        rowStart={2}
+                        colStart={1}
+                        inputColSize={3}
                     />
                 </InputLayout>
+                <LogPopupModel show={show} data={fetchedData} onClose={() => setShow(false)} handleRefresh={() => setRefresh((prev) => !prev)} />
                 <ButtonLayout>
+                    <Button textColor={'gray-500'} text={'View changes log'} icon={'icon-park-outline:log'} onClick={() => setShow(true)} />
                     <Button bgColor={'blue-500'} textColor={'white'} text={'Save'} icon={'material-symbols:save-as'} onClick={handleSubmit} />
+                    <Button bgColor={'red-500'} textColor={'white'} text={'Delete'} icon={'material-symbols:delete'} onClick={handleDelete} />
                     <Button bgColor={'white'} textColor={'gray-600'} text={'Cancel'} icon={'material-symbols:cancel-outline'} onClick={() => navigate('/web/courses/subjects')} />
                 </ButtonLayout>
             </FormLayout>

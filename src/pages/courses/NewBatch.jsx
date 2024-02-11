@@ -9,7 +9,7 @@ import { CustomCreateSelect } from '../../components/CustomSelect'
 import * as XLSX from 'xlsx';
 import { Select } from '../../components/Select';
 import { Input } from '../../components/Input';
-import { addBatch, getQueries } from '../../apis/batch/batch';
+import { Batch } from '../../apis/batch/batch';
 import { FormLayout } from '../../components/FormLayout';
 import { SectionLayout } from '../../components/SectionLayout';
 import { InputLayout } from '../../components/InputLayout';
@@ -18,6 +18,8 @@ import { TableLayout } from '../../components/TableLayout';
 import { Button } from '../../components/Button';
 import { FileInput } from '../../components/FileInput';
 import { LayoutHeader } from '../../components/LayoutHeader';
+import { Queries } from '../../apis/queries/queries'
+import { generateAcademicYears, mapAcademicYearToSemesters } from '../../services/academicYear';
 
 export const NewBatch = () => {
     const [batchName, setBatchName] = useState('');
@@ -29,7 +31,9 @@ export const NewBatch = () => {
     const [program, setProgram] = useState('');
     const [students, setStudents] = useState([]);
     const [studentsData, setStudentsData] = useState(null);
-    const [regulations, setRegulations] = useState(['R 21', 'R 17']);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingButtonId, setLoadingButtonId] = useState();
+    const [regulations, setRegulations] = useState([]);
     const [semesters, setSemesters] = useState(['1 SEM', '2 SEM', '3 SEM', '4 SEM', '5 SEM', '6 SEM', '7 SEM', '8 SEM']);
     const [departments, setDepartments] = useState(['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']);
     const [coursesName, setCoursesName] = useState([]);
@@ -44,43 +48,58 @@ export const NewBatch = () => {
         { label: 'Register Number', field: 'registerNumber' },
         { label: 'Name', field: 'name' },
         { label: 'Date Of Birth', field: 'dob' },
+        { label: 'Phone', field: 'phone' },
+        { label: 'Father\'s name', field: 'fathersName' },
+        { label: 'Mother\'s name', field: 'mothersName' },
+        { label: 'Address', field: 'address' },
+        { label: '10th Mark', field: '_10thMark' },
+        { label: '12th Mark', field: '_12thMark' },
     ];
 
     useEffect(() => {
-        const fetchQueries = async () => {
-            const result = await getQueries();
-            if (result.success) {
-                setCoursesName(result.data.courseNames)
-                const fetchedAcademicYears = result.data.academicYears;
-                const options = fetchedAcademicYears.map((option) => ({ label: option, value: option }));
-                setAcademicYears(options)
-                dispatch(showNotification({ type: "success", message: result.message }))
-            }
-            else {
-                dispatch(showNotification({ type: "error", message: result.message }))
-            }
-        }
-        fetchQueries();
+        const query = [{ collectionName: "courses", fields: ["regulation"] }]
+        Queries.getQueries(query)
+            .then((data) => setRegulations(data.queries.regulation))
+            .catch((err) => dispatch(showNotification({ type: "error", message: err.message })))
     }, []);
+
+    useEffect(() => {
+        if (regulation && department && program) {
+            const query = [{ collectionName: "courses", values: [{ program, department, regulation }], responseData: ["courseName"] }];
+            Queries.getDocuments(query)
+                .then((data) => { setCoursesName(data.options.courseName) })
+                .catch((err) => { console.log(err); dispatch(showNotification({ type: "error", message: err.message })) })
+        }
+    }, [regulation]);
+
+
+    useEffect(() => {
+        const academicYears = generateAcademicYears(batchName);
+        setAcademicYears(academicYears)
+    }, [batchName])
+
+    useEffect(() => {
+        const semesters = mapAcademicYearToSemesters(batchName, academicYear);
+        setSemesters(semesters)
+    }, [academicYear])
 
 
     const handleSubmit = async () => {
-        if (!batchName || !semester || !academicYear || !department || !courseName || !students || !studentsData) {
+        setIsLoading(true);
+        setLoadingButtonId('save');
+        if (!batchName || !semester || !academicYear || !regulation || !program || !department || !courseName || !students) {
+            setIsLoading(false);
             dispatch(showNotification({ type: 'error', message: 'Please fill in all fields before submitting' }));
             return;
         }
 
-        const data = { batchName, semester, academicYear: academicYear.value, courseName, department, program, students, studentsData };
-
+        const data = { batchName, semester, academicYear, regulation, courseName, department, program, students };
         console.log(data);
-        const result = await addBatch(data);
+        await Batch.addBatch(data)
+            .then((data) => dispatch(showNotification({ type: "success", message: data.message })))
+            .catch((err) => {dispatch(showNotification({ type: "error", message: err.message })); setIsLoading(false)})
 
-        if (result.success) {
-            dispatch(showNotification({ type: 'success', message: result.message }));
-            // navigate('/web/courses/batches');
-        } else {
-            dispatch(showNotification({ type: 'error', message: result.message }));
-        }
+        setIsLoading(false);
     };
 
     const handleAddIndividualStudent = () => {
@@ -88,41 +107,110 @@ export const NewBatch = () => {
 
     };
 
-    const handleFileInputChange = (file) => {
+    const handleFileInputChange = async (file) => {
         if (!file) {
             dispatch(showNotification({ type: 'error', message: 'Please select an Excel file' }));
             return;
         }
-    
+
+        const columnMappings = [
+            {
+                column: "Register Number",
+                format: "registerNumber"
+            },
+            {
+                column: "Name",
+                format: "name"
+            },
+            {
+                column: "Dob",
+                format: "dob"
+            },
+            {
+                column: "Email",
+                format: "email"
+            },
+            {
+                column: "Phone",
+                format: "phone"
+            },
+            {
+                column: "Fathers Name",
+                format: "fathersName"
+            },
+            {
+                column: "Fathers Phone",
+                format: "fathersPhone"
+            },
+            {
+                column: "Mothers Name",
+                format: "mothersName"
+            }, {
+                column: "Mothers Phone",
+                format: "mothersPhone"
+            },
+            {
+                column: "10th Mark",
+                format: "_10thMark"
+            }, {
+                column: "12th Mark",
+                format: "_12thMark"
+            }, {
+                column: "Counselling Application Number",
+                format: "counsellingApplicationNumber"
+            }, {
+                column: "Address",
+                format: "address"
+            },
+
+
+        ]
         try {
             const fileReader = new FileReader();
-    
+
             fileReader.onload = async (e) => {
                 try {
                     const data = e.target.result;
                     const workbook = XLSX.read(data, { type: 'binary' });
                     const sheetName = workbook.SheetNames[0];
                     const sheet = workbook.Sheets[sheetName];
-    
-                    const headers = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
-                    const registerNumberIndex = headers.indexOf('register number');
-                    const nameIndex = headers.indexOf('name');
-    
-                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, range: 1 });
-                    const registerNumbers = rows.map((row) => row[registerNumberIndex]);
-                    const studentsObject = rows.map((row) => ({
-                        registerNumber: row[registerNumberIndex],
-                        name: row[nameIndex]
-                    }));
-    
-                    setStudents(registerNumbers);
-                    setStudentsData(studentsObject);
+
+                    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                    // Map column names to their respective field keys
+                    const columnKeyMap = {};
+                    columnMappings.forEach(({ column, format }) => {
+                        const index = rows[0].indexOf(column); // Assuming column names are in the first row
+                        columnKeyMap[format] = index;
+                    });
+
+                    console.log(columnKeyMap);
+
+                    // Loop through the rows to create student objects
+                    const studentsData = rows.slice(1).map((row) => {
+                        const studentData = {};
+                        // Populate student data dynamically using column names and their field keys
+                        columnMappings.forEach(({ column, format }) => {
+                            const index = columnKeyMap[format];
+                            if (format === 'dob' && row[index]) {
+                                const dob = XLSX.SSF.parse_date_code(row[index]);
+                                const day = dob.d < 10 ? '0' + dob.d : dob.d;
+                                const month = dob.m < 10 ? '0' + dob.m : dob.m;
+                                studentData[format] = `${day}-${month}-${dob.y}`;
+                            } else {
+                                studentData[format] = row[index];
+                            }
+                        });
+                        return studentData;
+                    });
+
+                    setStudents(studentsData)
                 } catch (error) {
                     console.error('Error reading Excel sheet:', error);
                     dispatch(showNotification({ type: 'error', message: 'Error reading Excel sheet' }));
                 }
             };
-    
+
             fileReader.readAsBinaryString(file);
         } catch (error) {
             console.error('Error handling file input change:', error);
@@ -130,14 +218,13 @@ export const NewBatch = () => {
         }
     };
 
-
     return (
         <Layout>
-            <LayoutHeader title={'New Batch'}/>
+            <LayoutHeader title={'New Batch'} />
 
-            <FormLayout rows={10} cols={12}>
+            <FormLayout rows={8} cols={12}>
                 <SectionLayout title={'Batch Information'} />
-                <InputLayout rows={3} cols={12}>
+                <InputLayout rows={4} cols={12}>
                     <Input
                         value={batchName}
                         type={'text'}
@@ -155,13 +242,23 @@ export const NewBatch = () => {
                         onChange={(selectedOption) => setProgram(selectedOption)}
                         rowStart={2}
                         colStart={1}
-                    ></Select><Select
+                    ></Select>
+                    <Select
                         label={'Department'}
                         placeholder={'Select Department'}
                         options={departments}
                         value={department}
                         onChange={(selectedOption) => setDepartment(selectedOption)}
                         rowStart={3}
+                        colStart={1}
+                    ></Select>
+                    <Select
+                        label={'Regulation'}
+                        placeholder={'Select Regulation'}
+                        options={regulations}
+                        value={regulation}
+                        onChange={(selectedOption) => setRegulation(selectedOption)}
+                        rowStart={4}
                         colStart={1}
                     ></Select>
                     <Select
@@ -173,7 +270,7 @@ export const NewBatch = () => {
                         rowStart={1}
                         colStart={6}
                     ></Select>
-                    <CustomCreateSelect
+                    <Select
                         placeholder={'Select Academic Year'}
                         options={academicYears}
                         value={academicYear}
@@ -181,7 +278,7 @@ export const NewBatch = () => {
                         rowStart={2}
                         colStart={6}
                         label={'Academic Year'}
-                    ></CustomCreateSelect>
+                    ></Select>
 
                     <Select
                         placeholder={'Select Semester'}
@@ -194,15 +291,17 @@ export const NewBatch = () => {
                     ></Select>
 
                 </InputLayout>
-                <ButtonLayout>
-                    <FileInput bgColor={'blue-500'} textColor={'white'} id={'studentsFile'} accept={'.xlsx, .xls'} label={'Add all students'} icon={'uiw:file-excel'} onFileSelect={(file) => handleFileInputChange(file)} />
-                    <Button bgColor={'blue-500'} textColor={'white'} text={'Add individual student'} />
-                    <Button bgColor={'green-500'} textColor={'white'} text={'Save & Create'} onClick={() => handleSubmit()} />
-                    <Button bgColor={'white'} textColor={'gray-500'} text={'Cancel'} onClick={()=>navigate('/web/courses/batches')}/>
-                </ButtonLayout>
-                <SectionLayout title={'Students'} />
-                <TableLayout cols={12} rows={8}>
-                    <Table headers={headers} data={studentsData} className="col-span-12" />
+
+                <SectionLayout title={'Students'}>
+                    <ButtonLayout marginTop={'0'}>
+                        <FileInput bgColor={'blue-500'} textColor={'white'} id={'studentsFile'} accept={'.xlsx, .xls'} label={'Add all students'} icon={'uiw:file-excel'} onFileSelect={(file) => handleFileInputChange(file)} />
+                        <Button bgColor={'blue-500'} textColor={'white'} text={'Add individual student'} icon={'ph:student-duotone'} />
+                        <Button bgColor={'green-500'} textColor={'white'} text={'Save & Create'} icon={'material-symbols:save-outline'} id={'save'} isLoading={isLoading} isLoadingId={loadingButtonId} onClick={() => handleSubmit()} />
+                        <Button bgColor={'white'} textColor={'gray-500'} text={'Cancel'} icon={'material-symbols:cancel-outline'} onClick={() => navigate('/web/courses/batches')} />
+                    </ButtonLayout>
+                </SectionLayout>
+                <TableLayout cols={12} rows={4}>
+                    <Table headers={headers} data={students} className="col-span-12" />
                 </TableLayout>
             </FormLayout>
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from '../../components/Layout';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../redux/actions/notification';
-import { addSubject } from '../../apis/subject/subject';
+import { SubjectServices } from '../../apis/subject/subject';
 import { CustomCreateSelect } from '../../components/CustomSelect';
 import { Input } from '../../components/Input';
 import { LayoutHeader } from '../../components/LayoutHeader'
@@ -14,43 +14,46 @@ import { InputLayout } from '../../components/InputLayout';
 import { FormLayout } from '../../components/FormLayout';
 import { Button } from '../../components/Button';
 import { ButtonLayout } from '../../components/ButtonLayout';
+import { Queries } from '../../apis/queries/queries';
 
 export const NewSubject = () => {
     const [formValues, setFormValues] = useState({
         department: '',
         program: '',
         regulation: '',
-        semester: '',
         subjectCode: '',
         subjectName: '',
-        subjectCredit: '',
-        isElective: false,
-        isMandatory: false,
+        subjectCredit: ''
     });
+    const [regulations, setRegulations] = useState([]);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const queries = [{ collectionName: "courses", fields: "regulation" }]
+        Queries.getQueries(queries).then((result) => {
+            setRegulations(result.queries.regulation);
+        })
+    }, [])
 
     const handleInputChange = (field, value) => {
         setFormValues(prevValues => ({ ...prevValues, [field]: value }));
     };
 
     const handleSubmit = async () => {
-        const { department, program, regulation, semester, subjectCode, subjectName, subjectCredit, isElective, isMandatory } = formValues;
+        const { department, program, regulation, subjectCode, subjectName, subjectCredit } = formValues;
 
-        if (!department || !program || !regulation || !semester || !subjectCode || !subjectName || !subjectCredit) {
+        if (!department || !program || !regulation || !subjectCode || !subjectName || !subjectCredit) {
             dispatch(showNotification({ type: "error", message: "Please fill in all fields before submitting" }));
             return;
         }
 
-        const data = { department: department.value, program, regulation: regulation.value, semester, subjectCode, subjectName, subjectCredit, isElective, isMandatory };
-        const result = await addSubject(data);
-
-        if (result.success) {
-            dispatch(showNotification({ type: "success", message: result.message }));
-        } else {
-            dispatch(showNotification({ type: "error", message: result.message }));
-        }
+        const data = { department, program, subjectCode, subjectName, subjectCredit};
+        await SubjectServices.addSubject(data).then((data) => {
+            dispatch(showNotification({ type: "success", message: data.message }));
+        }).catch((err) =>
+            dispatch(showNotification({ type: "error", message: err.message })))
     };
 
     return (
@@ -59,47 +62,32 @@ export const NewSubject = () => {
             <FormLayout rows={12} cols={12}>
                 <SectionLayout title={'Basic Information'} />
                 <InputLayout rows={3} cols={10}>
-                    <CustomCreateSelect
-                        placeholder={'Select Department'}
-                        value={formValues.department}
-                        onChange={(selectedOption) => handleInputChange('department', selectedOption)}
-                        options={[
-                            { label: 'CSE', value: 'CSE' },
-                            { label: 'IT', value: 'IT' },
-                            { label: 'ECE', value: 'ECE' },
-                            { label: 'EEE', value: 'EEE' },
-                            { label: 'MECH', value: 'MECH' },
-                            { label: 'CIVIL', value: 'CIVIL' },{ label: 'AIDS', value: 'AIDS' }
-                        ]}
-                        label={'Department'}
-                    />
                     <Select
                         label={'Program'}
                         options={['Undergraduate', 'Postgraduate']}
                         value={formValues.program}
                         placeholder={'Select program'}
                         onChange={(selectedOption) => handleInputChange('program', selectedOption)}
+                        rowStart={1}
+                        colStart={1}
+                    />
+                    <Select
+                        placeholder={'Select Department'}
+                        value={formValues.department}
+                        onChange={(selectedOption) => handleInputChange('department', selectedOption)}
+                        options={['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL', 'AIDS']}
+                        label={'Department'}
                         rowStart={2}
                         colStart={1}
                     />
-                    <CustomCreateSelect
+                    <Select
                         placeholder={'Select Regulation'}
                         value={formValues.regulation}
-                        options={[
-                            { label: 'R 21', value: 'R 21' },
-                            { label: 'R 17', value: 'R 17' }
-                        ]}
+                        options={regulations}
                         onChange={(selectedOption) => handleInputChange('regulation', selectedOption)}
                         label={'Regulation'}
                         rowStart={3}
                         colStart={1}
-                    />
-                    <Select
-                        label={'Semester'}
-                        options={['1 SEM', '2 SEM', '3 SEM', '4 SEM', '5 SEM', '6 SEM', '7 SEM', '8 SEM']}
-                        value={formValues.semester}
-                        placeholder={'Select semester'}
-                        onChange={(selectedOption) => handleInputChange('semester', selectedOption)}
                     />
                 </InputLayout>
                 <SectionLayout title={'Subject Details'} />

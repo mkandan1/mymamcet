@@ -12,11 +12,6 @@ export const Table = ({
   handleToggleRow,
   rowsPerPage,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * 10;
-  const endIndex = startIndex + 10;
-  const currentRows = data.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(data.length / 10);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -47,11 +42,16 @@ export const Table = ({
       </table>
     );
   }
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * 10;
+  const endIndex = startIndex + 10;
+  const currentRows = data.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(data.length / 10);
 
   return (
     <>
-      <table className='table col-span-12 auto-rows-auto border-[1.5px] border-gray-300'>
-        <thead className='bg-purple-500 border-t-2 border-l-2 border-r-2 border-b-4 border-purple-700'>
+      <table className='table col-span-12 auto-rows-auto border-[1.5px] border-gray-300 relative'>
+        <thead className='bg-purple-500 border-t-2 border-l-2 border-r-2 border-b-4 border-purple-700 sticky'>
           <tr>
             {headers.map((header, index) => (
               <th key={index} className='text-start font-sen text-gray-50 text-[14px] font-normal tracking-tighter pl-2 p-1 pt-4'>
@@ -83,11 +83,11 @@ export const Table = ({
             className={`px-2 py-1 mx-1 border text-sm h-8 rounded-md flex justify-center items-center gap-2 ${currentPage != 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-500'}`}
             onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : currentPage)}
           >
-            <Icon icon={'teenyicons:next-solid'} className={`text-${currentPage == 1 ? 'gray-500' : 'white'} text-xs rotate-180`}/>
+            <Icon icon={'teenyicons:next-solid'} className={`text-${currentPage == 1 ? 'gray-500' : 'white'} text-xs rotate-180`} />
             Previous
           </button>
           {
-            Array.from({length: totalPages},(_, index) => (
+            Array.from({ length: totalPages }, (_, index) => (
               <button
                 key={index + 1}
                 className={`px-2 py-1 mx-1 border-2 text-sm h-8 w-8 rounded-full flex justify-center ${index + 1 != currentPage ? 'bg-white text-gray-500' : 'bg-blue-500 text-white'}`}
@@ -98,11 +98,11 @@ export const Table = ({
             ))
           }
           <button
-            className={`px-2 py-1 mx-1 border text-sm h-8 rounded-md flex justify-between items-center gap-2 ${ currentPage == 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-500'}`}
+            className={`px-2 py-1 mx-1 border text-sm h-8 rounded-md flex justify-between items-center gap-2 ${currentPage == 1 && currentPage < totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-500'}`}
             onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : currentPage)}
           >
             Next
-            <Icon icon={'teenyicons:next-solid'} className={`text-${currentPage != 1 ? 'gray-500' : 'white'} text-xs`}/>
+            <Icon icon={'teenyicons:next-solid'} className={`text-${currentPage != 1 ? 'gray-500' : 'white'} text-xs`} />
           </button>
         </div>
       </table>

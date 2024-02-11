@@ -54,6 +54,15 @@ export const Navigation = () => {
       ],
       isExpanded: false,
     },
+    {
+      id: 6,
+      title: 'Exam',
+      icon: 'ph:exam',
+      subMenuItems: [
+        { id: 11, title: 'Mark Allocation', url: '/web/exam/mark-allocation' },
+      ],
+      isExpanded: false,
+    },
   ]);
 
   const toggleSubMenu = (itemId) => {

@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Layout } from '../../components/Layout';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
-import { getAllCourse } from '../../apis/course/course';
-import { Table } from '../../components/Table';
+import { CourseServices } from '../../apis/course/course'
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../redux/actions/notification';
+import { LoadingState } from '../../components/LoadingState';
+import { Button } from '../../components/Button'
+import { ButtonLayout } from '../../components/ButtonLayout'
 
 export const Course = () => {
   const navigate = useNavigate();
@@ -12,40 +16,27 @@ export const Course = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [view, setView] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const result = await getAllCourse();
-        if (result.success) {
-          setData(result.data);
-          setFilteredData(result.data);
-        } else {
-          console.error(result.message);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    CourseServices.getAllCourse().then((data) => {
+      setData(data.courses)
+      setIsLoading(false)
+    }).catch((err) => {
+      dispatch(showNotification({ type: "error", message: err.message }))
+      setIsLoading(false)
+    })
   }, []);
 
 
   useEffect(() => {
-    // Update filteredData when the query changes
     setFilteredData(
       data.filter(course => course.courseName.toLowerCase().includes(query.toLowerCase()))
     );
-    console.log(data);
   }, [data, query]);
 
-  const handleView = (id)=>{
+  const handleView = (id) => {
     setView(id);
-    console.log(view);
   }
 
   return (
@@ -54,23 +45,20 @@ export const Course = () => {
         <h3 className='font-sen font-medium text-lg tracking-tighter text-gray-600'>All courses</h3>
       </div>
       <div className='row-start-2 row-span-1 col-span-12 items-center px-4 grid grid-cols-12'>
-        <button className='bg-green-500 row-span-1 text-white font-normal font-manrope text-sm tracking-wider h-[32px]' onClick={() => { navigate('/web/courses/course/new') }}>New</button>
-        <button className='bg-blue-500 row-span-1 text-white font-normal font-manrope text-sm tracking-wider ml-2 h-[32px]' onClick={() => { navigate(`/web/courses/course/${view}`) }}>View</button>
+        <ButtonLayout>
+          <Button bgColor={'green-500'} textColor={'white'} text={'Create'} icon={'oui:plus'} onClick={()=> navigate('/web/courses/course/new')}/>
+          <Button textColor={'white'} bgColor={'blue-500'} text={'Edit'} icon={'bx:edit'} onClick={()=> view &&(navigate('/web/courses/course/'+view))}/>
+        </ButtonLayout>
         <div className='col-start-10 col-span-5 grid grid-cols-4 gap-2'>
           {/* <span className='flex items-center gap-x-2 text-gray-600 cursor-pointer'>Filter by <Icon icon={'ion:filter-sharp'} /></span> */}
-          <input type='search' className='h-[32px] border border-gray-500 bg-white w-full text-xs col-span-2' placeholder='Type course name...' value={query} onChange={(e) => setQuery(e.target.value)} />
-          <button className='bg-blue-500 text-white h-[32px] font-manrope text-sm col-span-1'>search</button>
+          {/* <input type='search' className='h-[32px] border border-gray-500 bg-white w-full text-xs col-span-2' placeholder='Type course name...' value={query} onChange={(e) => setQuery(e.target.value)} /> */}
         </div>
       </div>
       <div className='row-span-8 col-span-12 grid grid-cols-12 grid-rows-8'>
-        {isLoading ? (
-          <div>
-            <Icon icon={'eos-icons:three-dots-loading'} className='text-5xl'></Icon>
-          </div>
-        ) : (
-          Array.isArray(filteredData) && filteredData.length > 0 ? (
+        <LoadingState isLoading={isLoading} rows={'8'} cols={'12'}>
+          {Array.isArray(filteredData) && filteredData.length > 0 ? (
             filteredData.map((course) => (
-              <div key={course._id} className={`col-span-4 row-span-4 grid grid-cols-4 p-5 m-5 gap-2 bg-white border text-gray-800 cursor-pointer ${view == course._id ? 'border-blue-500': 'border border-gray-300'}`} onClick={()=>handleView(course._id)}>
+              <div key={course._id} className={`col-span-4 row-span-4 grid grid-cols-4 p-5 m-5 gap-2 bg-white border text-gray-800 cursor-pointer ${view == course._id ? 'border-blue-500' : 'border border-gray-300'}`} onClick={() => handleView(course._id)}>
                 <p className='row-span-1 col-span-4 text-blue-950 font-manrope font-semibold text-md'>{course.courseName}</p>
                 <div className='col-span-2 gap-2'>
                   <p className='row-span-1 mt-2 text-gray-500'><span className='font-sen'>Regulation</span></p>
@@ -85,9 +73,12 @@ export const Course = () => {
               </div>
             ))
           ) : (
-            <p className='row-span-1 row-start-2 col-span-12 text-center'>No data available</p>
+            <p className='row-span-1 row-start-2 col-span-12 flex justify-center  items-center gap-2 mt-20'>
+              <Icon icon={'mdi:question-mark-box'} />
+              No data available</p>
           )
-        )}
+          }
+        </LoadingState>
       </div>
     </Layout>
   );

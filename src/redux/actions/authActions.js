@@ -1,4 +1,4 @@
-export const loggedIn = ({user}) => ({
+export const setLoggedIn = ({user}) => ({
     type: 'LOGGED_IN',
     payload: {user}
 });
