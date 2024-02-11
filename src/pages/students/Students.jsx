@@ -4,9 +4,14 @@ import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 // import { getAllStudents } from '../../apis/student/student';
 import { Table } from '../../components/Table';
+import { LoadingState } from '../../components/LoadingState'
+import { StudentService } from '../../apis/student/student';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../redux/actions/notification';
 
 export const Students = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,24 +19,11 @@ export const Students = () => {
   const [view, setView] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        // const result = await getAllStudents();
-        if (result.success) {
-          setData(result.data);
-          setFilteredData(result.data);
-        } else {
-          console.error(result.message);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    StudentService.getAllStudents()
+      .then((data)=> {
+        setData(data.students)
+      })
+      .catch((err)=> dispatch(showNotification({type: "error", message: err.response.data.message})))
   }, []);
 
   useEffect(() => {
@@ -46,12 +38,16 @@ export const Students = () => {
   };
 
   const headers = [
-    { label: 'Name', field: 'name' },
     { label: 'Register Number', field: 'registerNumber' },
-    { label: 'Batch', field: 'batch' },
-    { label: 'Regulation', field: 'regulation' },
-    { label: 'Course', field: 'course' },
-  ];
+    { label: 'Name', field: 'name' },
+    { label: 'Date Of Birth', field: 'dob' },
+    { label: 'Phone', field: 'phone' },
+    { label: 'Father\'s name', field: 'fathersName' },
+    { label: 'Mother\'s name', field: 'mothersName' },
+    { label: 'Address', field: 'address' },
+    { label: '10th Mark', field: '_10thMark' },
+    { label: '12th Mark', field: '_12thMark' },
+];
 
   return (
     <Layout>
@@ -59,25 +55,21 @@ export const Students = () => {
         <h3 className='font-sen font-medium text-lg tracking-tighter text-gray-600'>All Students</h3>
       </div>
       <div className='row-start-2 row-span-1 col-span-12 items-center px-4 grid grid-cols-12'>
-        <button className='bg-green-500 row-span-1 text-white font-normal font-manrope text-sm tracking-wider h-[32px]' onClick={() => { navigate('/web/students/student/new') }}>New</button>
-        <button className='bg-blue-500 row-span-1 text-white font-normal font-manrope text-sm tracking-wider ml-2 h-[32px]' onClick={() => { navigate(`/web/students/student/${view}`) }}>View</button>
         <div className='col-start-10 col-span-5 grid grid-cols-4 gap-2'>
           <input type='search' className='h-[32px] border border-gray-500 bg-white w-full text-xs col-span-2' placeholder='Type student name...' value={query} onChange={(e) => setQuery(e.target.value)} />
           <button className='bg-blue-500 text-white h-[32px] font-manrope text-sm col-span-1'>Search</button>
         </div>
       </div>
-      <div className='row-span-8 col-span-12 grid grid-cols-12 grid-rows-8'>
-        {isLoading ? (
-          <div>
-            <Icon icon={'eos-icons:three-dots-loading'} className='text-5xl'></Icon>
-          </div>
-        ) : (
-          Array.isArray(filteredData) && filteredData.length > 0 ? (
-            <Table headers={headers} data={filteredData} onViewRow={(id) => handleView(id)} view={view} />
+      <div className='row-span-8 col-span-12 grid grid-cols-12 grid-rows-8 px-4'>
+        <LoadingState rows={8} cols={12}>
+          {Array.isArray(filteredData) && filteredData.length > 0 ? (
+            <Table headers={headers} data={filteredData} onViewRow={(id) => handleView(id)} view={view}/>
           ) : (
-            <p className='row-span-1 row-start-2 col-span-12 text-center'>No data available</p>
-          )
-        )}
+            <p className='row-span-1 row-start-2 col-span-12 flex justify-center  items-center gap-2 mt-20'>
+              <Icon icon={'mdi:question-mark-box'} />
+              No data available</p>
+          )}
+        </LoadingState>
       </div>
     </Layout>
   );

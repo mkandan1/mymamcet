@@ -51,7 +51,7 @@ export const Table = ({
   return (
     <>
       <table className='table col-span-12 auto-rows-auto border-[1.5px] border-gray-300 relative'>
-        <thead className='bg-purple-500 border-t-2 border-l-2 border-r-2 border-b-4 border-purple-700 sticky'>
+        <thead className='bg-purple-500 border-t-2 border-l-2 border-r-2 border-b-4 border-purple-700 sticky top-0'>
           <tr>
             {headers.map((header, index) => (
               <th key={index} className='text-start font-sen text-gray-50 text-[14px] font-normal tracking-tighter pl-2 p-1 pt-4'>
