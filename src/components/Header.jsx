@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 export const Header = ({ children }) => {
     const [user, setUser] = useState(useSelector((state)=> (state.auth.user)).user);
     return (
-        <div className='header w-full h-screen grid grid-cols-12 grid-rows-12 col-span-12 row-span-12 row-start-1 col-start-3 bg-gray-100 relative'>
+        <div className='header w-full h-screen grid grid-cols-12 grid-rows-custom col-span-12 row-span-12 row-start-1 col-start-3 bg-gray-100 relative'>
             <div className='w-full h-full col-span-12 row-span-1 px-4 row-start-1 grid grid-cols-12 grid-rows-1 bg-blue-700'>
-                <div className='col-span-4 flex items-center'>
-                    <h2 className='hidden lg:block md:text-base text-white'>
+                <div className='col-span-5 flex items-center'>
+                    <h2 className='hidden lg:block text-md text-white'>
                         M.A.M. COLLEGE OF ENGINEERING AND TECHNOLOGY
                     </h2>
                 </div>

@@ -61,8 +61,14 @@ export const MyProfile = () => {
   };
 
 
-  const handleLogOut = () => {
-    logOutUser(dispatch, navigate)
+  const handleLogOut = async () => {
+    await Auth.logOut(dispatch)
+      .then((result)=> {
+
+      })
+      .catch((err)=>{
+        dispatch(showNotification({type: "error", message: err.response.data.message}))
+      })
   };
 
   return (
@@ -87,7 +93,7 @@ export const MyProfile = () => {
           <div className='col-span-2'>
             <img src={selectedImage} className='w-full rounded-md' alt='User Profile' />
             <button
-              className={`w-full px-4 text-sm font-manrope font-regular rounded-sm text-white mt-4 ${isLoading ? 'bg-blue-200' : 'bg-blue-700'}`}
+              className={`w-full px-4 btn text-sm font-manrope font-regular rounded-sm text-white mt-4 ${isLoading ? 'bg-blue-200' : 'bg-blue-700'}`}
               onClick={() => fileInputRef.current.click()}
             >
               {isLoading ? 'Uploading' : 'Change photo'}
@@ -136,7 +142,7 @@ export const MyProfile = () => {
             </div>
 
             <div className='row-span-1 mt-4 col-span-1 gap'>
-              <button className='bg-red-500 text-white w-full rounded-sm' onClick={handleLogOut}>Log out</button>
+              <button className='bg-red-500 btn text-white w-full rounded-sm' onClick={handleLogOut}>Log out</button>
             </div>
           </div>
         </div>

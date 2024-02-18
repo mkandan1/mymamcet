@@ -84,7 +84,7 @@ export const Login = () => {
                     </div>
 
                     <div>
-                        <button className={`${isProgress ? "loading" : ""} w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleSignInUser}>{isProgress ? 'Singing in you...' : 'Sign In'}</button>
+                        <button className={`${isProgress ? "loading" : ""} btn w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleSignInUser}>{isProgress ? 'Singing in you...' : 'Sign In'}</button>
                     </div>
                 </div>
             </div>

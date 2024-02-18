@@ -34,6 +34,25 @@ export class Auth {
         return signUpResult;
     }
 
+    static async logOut(dispatch){
+        try{
+            return new Promise(async(resolve, reject)=> {
+                const logOutResult = await API.getRequest('/auth/logOut');
+
+                if(logOutResult.success){
+                    dispatch(logOut())
+                    resolve(logOutResult)
+                }
+                else{
+                    reject(logOutResult)
+                }
+            })
+        }
+        catch(err){
+            return err
+        }
+    }
+
     static async changeProfilePhoto(url) {
         try {
             const changePhotoURLResult = await API.putRequest('/auth/change-profile-photo', { url: url })

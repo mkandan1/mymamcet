@@ -5,6 +5,7 @@
 /* Define scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {

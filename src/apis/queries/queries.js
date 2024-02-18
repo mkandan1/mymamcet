@@ -19,7 +19,6 @@ class Queries {
         return new Promise(async (resolve, reject) => {
             try {
                 const convertedQuery = this.constructDocumentQueriesParams(queries);
-                console.log(convertedQuery);
                 const result = await API.getRequest('/queries/documents', convertedQuery);
                 if (result.success) {
                     resolve(result);
@@ -59,6 +58,44 @@ class Queries {
     
         return queryStrings;
     }
+
+    static async getRegulations(){
+        try{
+            return new Promise(async(resolve, reject)=> {
+                const query = [{ collectionName: "courses", fields: ["regulation"] }]
+                this.getQueries(query).then((data)=> {
+                    if(data.success){
+                        resolve(data)
+                    }
+                    else{
+                        reject(data);
+                    }
+                })
+            })
+        }
+        catch(err){
+            return err
+        }
+    }
+
+    static async getCourse(){
+        try{
+            return new Promise(async(resolve, reject)=> {
+                const query = [{ collectionName: "courses", fields: ["courseName"] }]
+                this.getQueries(query).then((data)=> {
+                    if(data.success){
+                        resolve(data)
+                    }
+                    else{
+                        reject(data);
+                    }
+                })
+            })
+        }
+        catch(err){
+            return err
+        }
+    }
     
     
     static constructLogsParams(logs){
@@ -79,16 +116,3 @@ class Queries {
 }
 
 export { Queries }
-
-export const getRegulation = async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/queries/regulations`, {
-            withCredentials: true
-        })
-        const result = response.data
-        return result
-    }
-    catch (err) {
-        return { success: false, message: err.message }
-    }
-}
