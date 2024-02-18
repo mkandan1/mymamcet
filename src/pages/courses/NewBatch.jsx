@@ -19,7 +19,7 @@ import { Button } from '../../components/Button';
 import { FileInput } from '../../components/FileInput';
 import { LayoutHeader } from '../../components/LayoutHeader';
 import { Queries } from '../../apis/queries/queries'
-import { generateAcademicYears, mapAcademicYearToSemesters } from '../../services/academicYear';
+import { generateAcademicYears } from '../../services/academicYear';
 
 export const NewBatch = () => {
     const [batchName, setBatchName] = useState('');
@@ -34,7 +34,6 @@ export const NewBatch = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingButtonId, setLoadingButtonId] = useState();
     const [regulations, setRegulations] = useState([]);
-    const [semesters, setSemesters] = useState(['1 SEM', '2 SEM', '3 SEM', '4 SEM', '5 SEM', '6 SEM', '7 SEM', '8 SEM']);
     const [departments, setDepartments] = useState(['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']);
     const [coursesName, setCoursesName] = useState([]);
     const [programs, setPrograms] = useState(['Undergraduate', 'Postgraduate']);
@@ -78,23 +77,17 @@ export const NewBatch = () => {
         setAcademicYears(academicYears)
     }, [batchName])
 
-    useEffect(() => {
-        const semesters = mapAcademicYearToSemesters(batchName, academicYear);
-        setSemesters(semesters)
-    }, [academicYear])
-
 
     const handleSubmit = async () => {
         setIsLoading(true);
         setLoadingButtonId('save');
-        if (!batchName || !semester || !academicYear || !regulation || !program || !department || !courseName || !students) {
+        if (!batchName || !academicYear || !regulation || !program || !department || !courseName || !students) {
             setIsLoading(false);
             dispatch(showNotification({ type: 'error', message: 'Please fill in all fields before submitting' }));
             return;
         }
 
-        const data = { batchName, semester, academicYear, regulation, courseName, department, program, students };
-        console.log(data);
+        const data = { batchName, academicYear, regulation, courseName, department, program, students };
         await Batch.addBatch(data)
             .then((data) => dispatch(showNotification({ type: "success", message: data.message })))
             .catch((err) => {dispatch(showNotification({ type: "error", message: err.message })); setIsLoading(false)})
@@ -278,16 +271,6 @@ export const NewBatch = () => {
                         rowStart={2}
                         colStart={6}
                         label={'Academic Year'}
-                    ></Select>
-
-                    <Select
-                        placeholder={'Select Semester'}
-                        options={semesters}
-                        value={semester}
-                        onChange={(selectedOption) => setSemester(selectedOption)}
-                        label={'Semester'}
-                        rowStart={3}
-                        colStart={6}
                     ></Select>
 
                 </InputLayout>

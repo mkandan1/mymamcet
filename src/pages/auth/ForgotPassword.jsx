@@ -50,7 +50,7 @@ export const ForgotPassword = () => {
                         </div>
 
                         <div>
-                        <button className={`${isProgress ? "loading" : ""} w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleForgotPassword}>{isProgress ? 'Sending you a email' : 'Forgot Password'}</button>
+                        <button className={`${isProgress ? "loading" : ""} btn w-full font-sen tracking-tighter bg-blue-500 text-white`} onClick={handleForgotPassword}>{isProgress ? 'Sending you a email' : 'Forgot Password'}</button>
                         </div>
                     </div>
                 </div>

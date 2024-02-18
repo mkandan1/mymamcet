@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MyProfile } from './pages/accounts/MyProfile';
 import { Settings } from './pages/accounts/Settings';
 import { Course } from './pages/courses/Course';
-// import { SubjectMapping } from './pages/courses/SubjectMapping';
+import { SubjectMapping } from './pages/courses/SubjectMapping';
 import { Employees } from './pages/employees/Employees';
 import { Notifications } from './pages/accounts/Notification';
 import { NewCourses } from './pages/courses/NewCourses';
@@ -87,7 +87,7 @@ function App() {
           <Route path="/web/courses/batches/batch/:id" element={<EditBatch />} />
           <Route path="/web/courses/subjects/subject/new" element={<NewSubject />} />
           <Route path="/web/courses/subjects/subject/:id" element={<EditSubject />} />
-          {/* <Route path="/web/courses/subject-mapping" element={<SubjectMapping />} /> */}
+          <Route path="/web/courses/subject-mapping" element={<SubjectMapping />} />
           <Route path="/web/students/all" element={<Students />} />
           <Route path="/web/exam/mark-allocation" element={<MarkAllocation />} />
           <Route path="/web/settings" element={<Settings />} />

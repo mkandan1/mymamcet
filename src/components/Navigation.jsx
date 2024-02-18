@@ -88,7 +88,7 @@ export const Navigation = () => {
               >
                 <div className='flex items-center flex-wrap gap-x-4 text-gray-700'>
                   <Icon icon={menuItem.icon} className='text-blue-500 text-[18px]' />
-                  <span className='font-manrope text-sm tracking-normal'>{menuItem.title}</span>
+                  <span className='font-manrope text-base tracking-normal'>{menuItem.title}</span>
                 </div>
 
                 <Icon
