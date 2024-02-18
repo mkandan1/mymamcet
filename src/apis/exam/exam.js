@@ -24,7 +24,6 @@ export class Exam {
 
     static async getSubjects(batch) {
         try {
-            console.log(batch);
             const subjects = [];
             for (const semester of batch.semesters) {
                 for (const subject of semester.subjects) {

@@ -11,11 +11,27 @@ export const Table = ({
   selectedRows,
   handleToggleRow,
   rowsPerPage,
+  faculties,
+  assignedFaculties,
+  setAssignedFaculties
 }) => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const assignFaculty = (facultyId, subjectId) => {
+    const existingIndex = assignedFaculties.findIndex(item => item.subjectId === subjectId);
+  
+    if (existingIndex !== -1) {
+      const updatedAssignedFaculties = [...assignedFaculties];
+      updatedAssignedFaculties[existingIndex].facultyId = facultyId;
+      setAssignedFaculties(updatedAssignedFaculties);
+    } else {
+      const updatedAssignedFaculties = [...assignedFaculties, { subjectId, facultyId }];
+      setAssignedFaculties(updatedAssignedFaculties);
+    }
+  }  
 
   if (!data || data.length === 0) {
     return (
@@ -61,6 +77,14 @@ export const Table = ({
                 </div>
               </th>
             ))}
+            {faculties?.length > 0 && (
+              <th className='text-start font-sen text-gray-50 text-[14px] font-normal tracking-tighter pl-2 p-1 pt-4'>
+                <div className='flex items-center gap-1'>
+                  <Icon icon={'fluent:filter-20-regular'} className='text-white cursor-pointer' />
+                  Faculty
+                </div>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody className={`bg-white overflow-auto h-${height ? height : 'full'}`}>
@@ -75,6 +99,19 @@ export const Table = ({
                   {row[header.field]}
                 </td>
               ))}
+              {
+                faculties?.length > 0 &&
+                <td className='font-manrope text-sm pl-2 p-1'>
+                  <select className='text-gray-600' onChange={(e) => assignFaculty(e.target.value, row._id)}>
+                    <option value={''} className='text-gray-400'>Assign faculty</option>
+                    {faculties.map((factly) => (
+                      <option value={factly._id}>
+                        {factly.firstName} {factly.lastName}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              }
             </tr>
           ))}
         </tbody>

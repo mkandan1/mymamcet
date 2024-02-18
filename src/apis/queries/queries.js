@@ -26,7 +26,7 @@ class Queries {
                     reject(result);
                 }
             } catch (error) {
-                reject({ success: false, message: "Internal Server Error" });
+                reject(error);
             }
         });
     }
@@ -48,7 +48,7 @@ class Queries {
         const queryStrings = queries.map(queryObj => {
             const { collectionName, values, responseData } = queryObj;
             // Constructing the query string from values object
-            const queryString = Object.entries(values).map(([key, value]) => Object.entries(value).map(([key, value])=> `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)).join('&');
+            const queryString = Object.entries(values).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
             
             // Constructing the response format string
             const responseFormatString = responseData.join(',');

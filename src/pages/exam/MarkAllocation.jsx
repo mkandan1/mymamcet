@@ -28,6 +28,7 @@ export const MarkAllocation = () => {
     const [students, setStudents] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [tableData, setTableData] = useState([]);
+    const [view, setView] = useState();
     const [regulations, setRegulations] = useState([]);
     const [exams, setExams] = useState(['CIA 1', 'CIA 2', 'Model', 'University'])
     const [data, setData] = useState([]);
@@ -61,7 +62,7 @@ export const MarkAllocation = () => {
 
     useEffect(() => {
         if (batch.regulation && batch.department && batch.program) {
-            const query = [{ collectionName: "courses", values: [{ program: batch.program, department: batch.department, regulation: batch.regulation }], responseData: ["courseName"] }];
+            const query = [{ collectionName: "courses", values: { program: batch.program, department: batch.department, regulation: batch.regulation }, responseData: ["courseName"] }];
             Queries.getDocuments(query)
                 .then((data) => { setCoursesName(data.options.courseName) })
                 .catch((err) => { console.log(err); dispatch(showNotification({ type: "error", message: err.message })) })
@@ -70,7 +71,7 @@ export const MarkAllocation = () => {
 
     useEffect(() => {
         if (batch.courseName) {
-            const queries = [{ collectionName: "batches", values: [{ program: batch.program, department: batch.department, courseName: batch.courseName }], responseData: ["batchName"] }]
+            const queries = [{ collectionName: "batches", values: { program: batch.program, department: batch.department, courseName: batch.courseName }, responseData: ["batchName"] }]
             Queries.getDocuments(queries)
                 .then((data) => {
                     setBatchNames(data.options.batchName)
@@ -96,7 +97,6 @@ export const MarkAllocation = () => {
         }
         await Exam.getStudentsAndSemester(parameters)
             .then(async (snapshot) => {
-                console.log(snapshot.batch);
                 setData(snapshot.batch)
                 setStudents(snapshot.batch.students)
                 const subjectsArray = await Exam.getSubjects(snapshot.batch)
@@ -187,7 +187,7 @@ export const MarkAllocation = () => {
                         colStart={2}
                     />
                 </InputLayout>
-                <MarkAllocationPopup show={show} subjects={subjects} data={students} subtitles={batch} onClose={()=> setShow(false)}/>
+                <MarkAllocationPopup show={show} subjects={subjects} data={data} students={students} subtitles={batch} onViewRow={(id)=> setView(id)} onClose={()=> setShow(false)}/>
                 <ButtonLayout marginTop={'0'}>
                     <Button bgColor={'blue-500'} textColor={'white'} text={'Get students'} icon={'ph:student-light'} onClick={() => handleGetStudentsAndSemester()} />
                     <Button bgColor={'green-500'} textColor={'white'} text={'Enter Marks'} icon={'uil:edit'} />

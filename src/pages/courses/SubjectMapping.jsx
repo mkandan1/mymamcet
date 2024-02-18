@@ -40,7 +40,9 @@ export const SubjectMapping = () => {
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [allBatches, setAllBatches] = useState();
     const [faculties, setFaculties] = useState([]);
+    const [assignedFaculties, setAssignedFaculties] = useState([]);
     const [show, setShow] = useState(false);
+    const [view, setView] = useState();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const headers = [
@@ -48,7 +50,6 @@ export const SubjectMapping = () => {
         { label: 'Subject Name', field: 'subjectName' },
         { label: 'Department', field: 'department' },
         { label: 'Program', field: 'program' },
-        { label: 'Faculty', field: 'faculty' },
     ];
 
     const handleSelectedSubjects = (data) => {
@@ -63,8 +64,14 @@ export const SubjectMapping = () => {
             dispatch(showNotification({ type: 'error', message: "Please fill all fields before submitting" }))
             return
         }
+        const isFacultyEmpty = assignedFaculties.some(entry => entry.facultyId === '');
+
+        if (selectedSubjects.length !== assignedFaculties.length || isFacultyEmpty) {
+            return dispatch(showNotification({ type: "error", message: "Kindly assign faculty to every subject" }));
+        }
+        
         const arrayOfSubjectIds = selectedSubjects.map((subject) => subject._id);
-        const data = { ...batch, subjects: arrayOfSubjectIds }
+        const data = { ...batch, subjects: arrayOfSubjectIds, assignedFaculties: assignedFaculties }
 
         SubjectMappingServices.addSemester(data)
             .then((snapshot) => {
@@ -73,7 +80,6 @@ export const SubjectMapping = () => {
             .catch((err) => {
                 dispatch(showNotification({ type: "error", message: err.response.data.message }))
             })
-
     }
 
     useEffect(() => {
@@ -83,22 +89,31 @@ export const SubjectMapping = () => {
     }, []);
 
     useEffect(() => {
+        if (batch.department) {
+            const facultyQueries = [{ collectionName: "users", values: {}, responseData: ["firstName", "lastName"] }]
+            Queries.getDocuments(facultyQueries)
+                .then((snapshot) => {
+                    setFaculties(snapshot.documents.users)
+                })
+                .catch((err) => {
+                    dispatch(showNotification({ type: 'error', message: err.response.data.message }))
+                })
+        }
+    }, [batch.department])
+
+    useEffect(() => {
         if (batch.courseName) {
-            const queries = [{ collectionName: "batches", values: [{ program: batch.program, department: batch.department, courseName: batch.courseName }], responseData: ["batchName"] }]
+            const queries = [{ collectionName: "batches", values: { program: batch.program, department: batch.department, courseName: batch.courseName }, responseData: ["batchName"] }]
             Queries.getDocuments(queries)
                 .then((data) => {
                     setBatchNames(data.options.batchName)
                 }).catch((err) => dispatch(showNotification({ type: "error", message: err.response.data.message })))
-            const facultyQueries = [{collectionName: 'users', fields: ['firstName']}]
-            Queries.getQueries(facultyQueries)
-                .then((snapshot)=> console.log(snapshot))
-                .catch((err)=> console.error(err))
         }
     }, [batch.courseName])
 
     useEffect(() => {
         const academicYears = generateAcademicYears(batch.batchName);
-        setAcademicYears(academicYears)
+        setAcademicYears(academicYears);
     }, [batch.batchName])
 
     useEffect(() => {
@@ -199,7 +214,7 @@ export const SubjectMapping = () => {
                         <Button bgColor={'white'} textColor={'gray-500'} text={'Close'} icon={'carbon:close-outline'} onClick={() => navigate('/web/courses/batches')} />
                     </ButtonLayout>
                 </SectionLayout>
-                <Table headers={headers} data={selectedSubjects} isFaculty />
+                <Table headers={headers} data={selectedSubjects} faculties={faculties} view={view} assignedFaculties={assignedFaculties} setAssignedFaculties={setAssignedFaculties} onViewRow={(id) => setView(id)} />
             </FormLayout>
         </Layout>
     )
