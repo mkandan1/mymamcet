@@ -64,7 +64,7 @@ export const NewBatch = () => {
 
     useEffect(() => {
         if (regulation && department && program) {
-            const query = [{ collectionName: "courses", values: [{ program, department, regulation }], responseData: ["courseName"] }];
+            const query = [{ collectionName: "courses", values: { program, department, regulation }, responseData: ["courseName"] }];
             Queries.getDocuments(query)
                 .then((data) => { setCoursesName(data.options.courseName) })
                 .catch((err) => { console.log(err); dispatch(showNotification({ type: "error", message: err.message })) })
