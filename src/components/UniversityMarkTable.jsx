@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useSelector } from 'react-redux';
 
-export const MarkTable = ({
+export const UniversityMarkTable = ({
     subjects,
     data,
     students,
@@ -17,12 +17,41 @@ export const MarkTable = ({
 }) => {
     const [dynamicHeaders, setDynamicHeaders] = useState([]);
     const [enteries, setEnteries] = useState(10);
+    const [tableWidth, setTableWidth] = useState('100%');
     const defaultHeaders = [
         { label: 'Register Number', field: 'registerNumber' },
         { label: 'Name', field: 'name' },
     ];
-    const exams = ['CIA 1 Exam', 'CIA 2 Exam', 'Model Exam']
+    const grades = [
+        { label: 'O', value: 10 },
+        { label: 'A+', value: 9 },
+        { label: 'A', value: 8 },
+        { label: 'B+', value: 7 },
+        { label: 'B', value: 6 },
+        { label: 'C', value: 5 },
+        { label: 'RA', value: 0 }
+    ];
+
+    const exams = ['University Exam']
     const user = useSelector((state) => (state.auth.user.user));
+
+    useEffect(() => {
+        const handleResize = () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth > 769) {
+                const desiredWidth = Math.round(screenWidth * 0.9); // For example, setting table width to 90% of screen width
+                setTableWidth(`${desiredWidth}px`);
+            }
+        };
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         if (subjects.length > 0) {
@@ -107,7 +136,7 @@ export const MarkTable = ({
                         <span>Entries</span>
                     </div>
                 </div>
-                <table className='col-span-12 w-screen border-[1.5px] border-gray-300 relative overflow-x-auto'>
+                <table style={{ width: tableWidth }} className="col-span-12 border-[1.5px] border-gray-300 relative overflow-x-auto">
                     <thead className='bg-purple-500 w-full border-t-2 border-l-2 border-r-2 border-b-4 border-purple-700 sticky top-0'>
                         <tr className='h-full w-full'>
                             <th rowSpan="2" className={`text-start w-10 sticky bg-purple-500 z-10 left-0 font-sen text-gray-50 font-normal tracking-tighter`}>
@@ -174,28 +203,31 @@ export const MarkTable = ({
                                             .map((subject, subjectIndex) => (
                                                 <td key={subjectIndex} className='border border-gray-300'>
                                                     {data.semesters[0].assignedFaculties.some(assignment => assignment.subjectId === subject._id && assignment.facultyId === user._id) ? (
-                                                        <input
-                                                            type='number'
-                                                            value={newMarks.find(mark => mark.student == row._id && mark.exam == exam && mark.subject === subject._id)?.score || ''}
-                                                            min={0}
-                                                            max={100}
-                                                            placeholder='Enter Mark'
+                                                        <select
+                                                            value={newMarks.find(mark => mark.student == row._id && mark.exam == exam && mark.subject === subject._id)?.score || '0'}
                                                             id={`${rowIndex}-${subjectIndex}`}
                                                             className={`w-full h-8 bg-white font-manrope`}
                                                             onChange={(e) => handleMarkChange(row._id, subject._id, e.target.value, exam)}
                                                             onKeyDown={(e) => handleEnterKeyPress(e, rowIndex, subjectIndex)}
-                                                        />
+                                                        >
+                                                            {grades.map((grade, index) => (
+                                                                <option key={index} value={grade.value}>{grade.label}</option>
+                                                            ))}
+                                                        </select>
                                                     ) : (
-                                                        <input
+                                                        <select
+                                                            value={newMarks.find(mark => mark.student == row._id && mark.exam == exam && mark.subject === subject._id)?.score || ''}
                                                             id={`${rowIndex}-${subjectIndex}`}
-                                                            type='number'
-                                                            value=''
-                                                            min={0}
-                                                            max={100}
-                                                            className={`w-full h-8 cursor-not-allowed`}
+                                                            className={`w-full h-8 bg-gray-200 font-manrope cursor-not-allowed`}
+                                                            onChange={(e) => handleMarkChange(row._id, subject._id, e.target.value, exam)}
                                                             disabled
-                                                            placeholder='You are not assigned'
-                                                        />
+                                                            onKeyDown={(e) => handleEnterKeyPress(e, rowIndex, subjectIndex)}
+                                                        >
+                                                            <option value={''}>You are not assigned</option>
+                                                            {grades.map((grade, index) => (
+                                                                <option key={index} value={grade.value}>{grade.label}</option>
+                                                            ))}
+                                                        </select>
                                                     )}
                                                 </td>
                                             ))}

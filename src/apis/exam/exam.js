@@ -18,6 +18,40 @@ export class Exam {
         }
     }
 
+    static async updateScores(data){
+        return new Promise(async (resolve, reject) => {
+            try {
+                const updateScoreResult = await API.putRequest('/exam/update-score', data);
+
+                if (updateScoreResult.success) {
+                    resolve(updateScoreResult);
+                } else {
+                    reject(updateScoreResult);
+                }
+            }
+            catch (err) {
+                return reject(err)
+            }
+        });
+    }
+
+    static async storeScores(scoreArray) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const addScoreResult = await API.postRequest('/exam/add-score', scoreArray);
+
+                if (addScoreResult.success) {
+                    resolve(addScoreResult);
+                } else {
+                    reject(addScoreResult);
+                }
+            }
+            catch (err) {
+                return reject(err)
+            }
+        });
+    }
+
     static constructParams(obj) {
         return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
     }
