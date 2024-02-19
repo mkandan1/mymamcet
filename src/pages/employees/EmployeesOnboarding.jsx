@@ -7,6 +7,7 @@ import { addEmployeesToDB } from '../../apis/employee/employees';
 import { constants } from '../../constant/constant';
 import { savePhotoInFirebase } from '../../services/storeImages';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../../components/Button';
 
 export const EmployeesOnboarding = () => {
     const [selectedValue, setSelectedValue] = useState('');
@@ -113,12 +114,13 @@ export const EmployeesOnboarding = () => {
                 <h3 className='font-sen font-bold tracking-tighter text-gray-600'>Employees Onboarding</h3>
             </div>
             {
-                user.role > 3 ? (
+                user.role == 'admin' ? (
                     <>
                         <div className='h-full row-start-2 grid grid-cols-12 col-span-12 items-center justify-between bg-white border-b px-4'>
-                            <div className='col-span-3 gap-x-4 grid grid-cols-2'>
-                                <button className='w-auto px-4 text-sm font-manrope font-regular rounded-sm bg-blue-700 text-white' onClick={handleAddEmployee}>Add employee</button>
-                                <button className='w-auto px-4 text-sm font-manrope font-regular rounded-sm bg-transparent border-2' onClick={() => { navigate('/web/employees/all') }}>Cancel</button>
+                            <div className='col-span-4 gap-x-4 grid grid-cols-2'>
+                                <Button bgColor={'blue-700'} textColor={'white'} text={'Add employee'} onClick={handleAddEmployee} />
+                                {/* <button className='w-auto px-4 text-sm font-manrope font-regular rounded-sm btn bg-blue-700 text-white' onClick={handleAddEmployee}>Add employee</button> */}
+                                <Button bgColor={'white'} textColor={'gray-400'} text={'Cancel'} onClick={() => { navigate('/web/employees/all') }}/>
                             </div>
                             <div className='col-start-10 col-span-7 flex gap-4'>
                                 <div className='flex gap-4 text-sm'>
@@ -139,10 +141,13 @@ export const EmployeesOnboarding = () => {
                             <div className='col-span-12 row-span-12 grid grid-cols-12 grid-rows-12 w-full h-full bg-white border-2 gap-x-6 p-4'>
                                 <div className='w-full col-span-2 flex-shrink-0'>
                                     <div className='flex flex-col'>
-                                        <img src={formData.photo} id='profile_preview' alt='default profile' />
-                                        <button className='w-auto px-4 text-sm font-manrope font-regular rounded-sm bg-blue-700 text-white mt-4'
+                                        <img src={formData.photo} id='profile_preview' alt='default profile' className='mb-2'/>
+                                        <Button
+                                            bgColor={'blue-700'}
+                                            textColor={'white'}
+                                            text={'Upload a photo'}
                                             onClick={() => fileInputRef.current.click()}
-                                        >Upload a photo</button>
+                                        />
                                         <input
                                             type='file'
                                             accept='image/*' // Limit to image files

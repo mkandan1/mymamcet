@@ -23,7 +23,9 @@ export const NewSubject = () => {
         regulation: '',
         subjectCode: '',
         subjectName: '',
-        subjectCredit: ''
+        subjectCredit: '',
+        shortName: '',
+        type: '',
     });
     const [regulations, setRegulations] = useState([]);
 
@@ -42,19 +44,29 @@ export const NewSubject = () => {
     };
 
     const handleSubmit = async () => {
-        const { department, program, regulation, subjectCode, subjectName, subjectCredit } = formValues;
+        const { department, program, regulation, subjectCode, subjectName, subjectCredit, shortName, type } = formValues;
 
-        if (!department || !program || !regulation || !subjectCode || !subjectName || !subjectCredit) {
+        if (!department || !program || !regulation || !subjectCode || !subjectName || !subjectCredit || !shortName || !type) {
             dispatch(showNotification({ type: "error", message: "Please fill in all fields before submitting" }));
             return;
         }
 
-        const data = { department, program, subjectCode, subjectName, subjectCredit};
+        const data = { department, program, subjectCode, subjectName, subjectCredit, shortName, type};
         await SubjectServices.addSubject(data).then((data) => {
             dispatch(showNotification({ type: "success", message: data.message }));
         }).catch((err) =>
             dispatch(showNotification({ type: "error", message: err.message })))
     };
+
+    const handleKeyDown = (e, nextField) => {
+        if (e.key === 'Enter') {
+            const nextInput = document.querySelector(`input[name=${nextField}]`);
+            if (nextInput) {
+                nextInput.focus();
+            }
+        }
+    };
+    
 
     return (
         <Layout>
@@ -91,11 +103,12 @@ export const NewSubject = () => {
                     />
                 </InputLayout>
                 <SectionLayout title={'Subject Details'} />
-                <InputLayout rows={1} cols={12} overflow={true}>
+                <InputLayout rows={4} cols={12} overflow={true}>
                     <Input
                         label={'Subject Code'}
                         value={formValues.subjectCode}
                         onChange={(e) => handleInputChange('subjectCode', e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
                         rowStart={1}
                         colStart={1}
                         inputColSize={2}
@@ -103,18 +116,38 @@ export const NewSubject = () => {
                     <Input
                         label={'Subject Name'}
                         value={formValues.subjectName}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
                         onChange={(e) => handleInputChange('subjectName', e.target.value)}
-                        rowStart={1}
-                        colStart={6}
+                        rowStart={2}
+                        colStart={1}
                         inputColSize={2}
                     />
                     <Input
                         label={'Subject Credit'}
                         value={formValues.subjectCredit}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
                         onChange={(e) => handleInputChange('subjectCredit', e.target.value)}
-                        rowStart={1}
-                        colStart={7}
+                        rowStart={3}
+                        colStart={1}
                         inputColSize={2}
+                    />
+                    <Input
+                        label={'Short Name'}
+                        value={formValues.shortName}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
+                        onChange={(e) => handleInputChange('shortName', e.target.value)}
+                        rowStart={1}
+                        colStart={2}
+                        inputColSize={3}
+                    />
+                    <Select
+                        label={'Subject Type'}
+                        placeholder={'Choose subject type'}
+                        options={['Theory', 'Laboratory']}
+                        value={formValues.type}
+                        onChange={(option)=> handleInputChange('type', option)}
+                        rowStart={2}
+                        colStart={2}
                     />
                 </InputLayout>
                 <ButtonLayout>

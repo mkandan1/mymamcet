@@ -28,7 +28,8 @@ export const EditSubject = () => {
         program: '',
         subjectCode: '',
         subjectName: '',
-        subjectCredit: ''
+        subjectCredit: '',
+        shortName: ''
     });
 
     const navigate = useNavigate();
@@ -53,13 +54,13 @@ export const EditSubject = () => {
     }
 
     const handleSubmit = async () => {
-        const { department, program, subjectCode, subjectName, subjectCredit } = formValues;
+        const { department, program, subjectCode, subjectName, subjectCredit, shortName } = formValues;
         console.log(formValues)
-        if (!department || !program || !subjectCode || !subjectName || !subjectCredit) {
+        if (!department || !program || !subjectCode || !subjectName || !subjectCredit || !shortName) {
             dispatch(showNotification({ type: 'error', message: 'Please fill in all fields before submitting' }));
             return;
         }
-        const data = { _id: subjectId, department, program, subjectCode, subjectName, subjectCredit };
+        const data = { _id: subjectId, department, program, subjectCode, subjectName, subjectCredit, shortName };
         console.log(isDataModified(formValues, fetchedData));
         if (!isDataModified(formValues, fetchedData)) {
             return dispatch(showNotification({ type: "error", message: "No changes were found" }))
@@ -117,9 +118,19 @@ export const EditSubject = () => {
                     <Input
                         label={'Subject Credit'}
                         value={formValues.subjectCredit}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
                         onChange={(e) => handleInputChange('subjectCredit', e.target.value)}
                         rowStart={2}
                         colStart={1}
+                        inputColSize={3}
+                    />
+                    <Input
+                        label={'Short Name'}
+                        value={formValues.shortName}
+                        onKeyDown={(e) => handleKeyDown(e, 'subjectName')} 
+                        onChange={(e) => handleInputChange('shortName', e.target.value)}
+                        rowStart={2}
+                        colStart={2}
                         inputColSize={3}
                     />
                 </InputLayout>

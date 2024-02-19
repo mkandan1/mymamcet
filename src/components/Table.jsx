@@ -93,6 +93,7 @@ export const Table = ({
               key={rowIndex}
               className={`cursor-pointer border ${multipleChoice && selectedRows.includes(row._id) ? 'bg-blue-100 border-blue-500' : ''} ${view && row._id === view ? 'bg-blue-100 border-blue-500' : 'border-gray-400'}`}
               onClick={() => (multipleChoice ? handleToggleRow(row._id) : onViewRow(row._id))}
+             
             >
               {headers.map((header, colIndex) => (
                 <td key={colIndex} className='font-manrope text-sm pl-2 p-1'>
