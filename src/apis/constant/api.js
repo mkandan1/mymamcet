@@ -2,8 +2,6 @@ import axios from "axios";
 import { encryptData } from "../../services/encrypt-decrypt";
 
 axios.defaults.withCredentials = true
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = "https://mymamcet.vercel.app/"
-axios.defaults.headers.common['Origin'] = "https://mymamcet.vercel.app/"
 export class API {
     static api_link = import.meta.env.VITE_API_URL;
     static async getRequest(endpoint, params) {
