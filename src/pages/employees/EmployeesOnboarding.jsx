@@ -290,9 +290,9 @@ export const EmployeesOnboarding = () => {
                                                 onChange={(event) => handleInputChange(event, 'accessLevel')}
                                             >
                                                 <option value=''>Select Access Level</option>
-                                                <option value='Professor'>Professor</option>
-                                                <option value='Admin'>Admin</option>
-                                                <option value='Office'>Office</option>
+                                                <option value='professor'>Professor</option>
+                                                <option value='admin'>Admin</option>
+                                                <option value='office'>Office</option>
                                             </select>
                                         </div>
                                     </div>
