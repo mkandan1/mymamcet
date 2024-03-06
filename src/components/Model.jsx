@@ -10,7 +10,7 @@ export const Model = ({ title, show, subtitles, rows, cols, children, onClose })
                 <div className="model-header border-b border-gray-300 flex items-center justify-between p-2 px-8">
                     <div>
                         <h3 className="font-manrope text-blue-500">{title}</h3>
-                        {subtitles && (<h4 className='text-gray-600'>{subtitles.batchName} | {subtitles.exam} | {subtitles.semester} | {subtitles.courseName}</h4>)}
+                        {subtitles && (<h4 className='text-gray-600 font-manrope'>Batch: <span className='text-bold'>{subtitles.batchName}</span> Exam:  <span className='text-bold'>{subtitles.exam}</span> Semester: <span className='text-bold'>{subtitles.semester}</span> Academic Year: <span className='text-bold'>{subtitles.academicYear}</span></h4>)}
                     </div>
                     <Icon icon={'mdi:close-box'} className='cursor-pointer text-2xl text-gray-500' onClick={onClose} />
                 </div>

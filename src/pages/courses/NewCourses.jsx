@@ -36,6 +36,8 @@ export const NewCourses = () => {
 
     const data = { courseName: courseName, regulation: regulation.value, department: department, program: program };
 
+    console.log(data);
+
     const result = await CourseServices.addNewCourse(data);
 
     if (result.success) {

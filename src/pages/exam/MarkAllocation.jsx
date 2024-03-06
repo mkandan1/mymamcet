@@ -28,6 +28,7 @@ export const MarkAllocation = () => {
     const [semesters, setSemesters] = useState([['No semesters']]);
     const [students, setStudents] = useState([]);
     const [subjects, setSubjects] = useState([]);
+    const [semester, setSemester] = useState();
     const [tableData, setTableData] = useState([]);
     const [view, setView] = useState();
     const [regulations, setRegulations] = useState([]);
@@ -100,14 +101,17 @@ export const MarkAllocation = () => {
         }
         await Exam.getStudentsAndSemester(parameters)
             .then(async (snapshot) => {
-                setData(snapshot.batch)
-                setStudents(snapshot.batch.students)
+                const batch = snapshot.batch;
                 const subjectsArray = await Exam.getSubjects(snapshot.batch)
-                console.log(subjectsArray);
                 const examScores = snapshot.batch.exams[0]?.scores || [];
+                const students = snapshot.batch.students;
+                const semester = snapshot.batch.semesters[0]
+                setStudents(students);
+                setData(batch);
                 setSubjects(subjectsArray);
                 setAlreadyEnteredMark(examScores);
-                setNewMarks(examScores)
+                setNewMarks(examScores);
+                setSemester(semester);
                 setShow(true);
             })
             .catch((err) => {
@@ -120,7 +124,7 @@ export const MarkAllocation = () => {
     const handleUpdate = () => {
         const updatedMarks = newMarks.filter((mark, index) => {
             const existingMark = alreadyEnteredMark[index];
-            return existingMark && mark.score !== existingMark.score;
+            return existingMark && mark.score !== existingMark.score || mark.passingYear !== existingMark.passingYear;
         });
 
         if (updatedMarks.length === 0) {
@@ -163,9 +167,8 @@ export const MarkAllocation = () => {
 
         if (batch.exam === 'Internal Exam') {
             const allStudentsMarked = students.every(student =>
-                newMarks.some(mark => mark.student === student._id && mark.exam == batch.exam && mark.score !== undefined && mark.score >= 0 && mark.score <= 100)
+                newMarks.some(mark => mark.student == student._id && mark.score >= 0 && mark.score <= 100)
             );
-
             if (!allStudentsMarked) {
                 dispatch(showNotification({ type: 'error', message: "Please enter marks for all students and ensure they are between 0 to 100" }));
                 return;
@@ -177,13 +180,15 @@ export const MarkAllocation = () => {
             );
 
             if (!allStudentsMarked) {
-                dispatch(showNotification({ type: 'error', message: "Please enter marks for all students and ensure they are between 0 to 100" }));
+                dispatch(showNotification({ type: 'error', message: "Please enter marks for all students" }));
                 return;
             }
         }
 
         const filteredMarks = newMarks.filter(mark => !alreadyEnteredMark.find(alreadyEntered => alreadyEntered._id === mark._id));
         // Check if there are no new marks to save
+
+        console.log(filteredMarks);
         if (filteredMarks.length === 0) {
             dispatch(showNotification({ type: 'error', message: "No new marks to save" }));
             return;
@@ -206,8 +211,6 @@ export const MarkAllocation = () => {
                 dispatch(showNotification({ type: 'error', message: err.response.data.message }));
             });
     };
-
-
 
     return (
         <Layout>
@@ -288,7 +291,7 @@ export const MarkAllocation = () => {
                         colStart={2}
                     />
                 </InputLayout>
-                <MarkAllocationPopup show={show} subjects={subjects} data={data} students={students} batch={batch} onUpdate={handleUpdate} newMarks={newMarks} setNewMarks={(mark) => setNewMarks(mark)} onViewRow={(id) => setView(id)} onClose={() => setShow(false)} onSave={() => handleSaveScore()} />
+                <MarkAllocationPopup show={show} subjects={subjects} data={data} semester={semester} students={students} batch={batch} setStudents={setStudents} onUpdate={handleUpdate} newMarks={newMarks} setNewMarks={(mark) => setNewMarks(mark)} onViewRow={(id) => setView(id)} onClose={() => setShow(false)} onSave={() => handleSaveScore()} />
                 <ButtonLayout marginTop={'0'}>
                     <Button bgColor={'blue-500'} textColor={'white'} text={'Get students'} icon={'ph:student-light'} onClick={() => handleGetStudentsAndSemester()} />
                     <Button bgColor={'green-500'} textColor={'white'} text={'Enter Marks'} icon={'uil:edit'} />

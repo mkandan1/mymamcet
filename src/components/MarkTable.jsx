@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import { useSelector } from 'react-redux';
 
@@ -23,6 +23,8 @@ export const MarkTable = ({
     ];
     const exams = ['CIA 1 Exam', 'CIA 2 Exam', 'Model Exam']
     const user = useSelector((state) => (state.auth.user.user));
+    const inputRefs = useRef([])
+
 
     useEffect(() => {
         if (subjects.length > 0) {
@@ -33,6 +35,8 @@ export const MarkTable = ({
     useEffect(() => {
         setNewMarks(newMarks);
     }, [newMarks]);
+
+    console.log(newMarks);
 
     const generateDynamicHeaders = () => {
         const additionalHeaders = subjects.map((subject) => ({
@@ -45,28 +49,25 @@ export const MarkTable = ({
         setDynamicHeaders([...defaultHeaders, ...additionalHeaders]);
     };
 
-    const handleEnterKeyPress = (e, rowIndex, colIndex) => {
+    const handleEnterKeyPress = (e, examIndex, rowIndex, colIndex) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             const nextRowIndex = rowIndex + 1;
-            const nextRow = students[nextRowIndex];
-            if (nextRow) {
-                const nextInput = document.getElementById(`${nextRowIndex}-${colIndex}`);
-                if (nextInput) {
-                    nextInput.focus();
-                }
+            const nextColIndex = colIndex;
+            if (nextRowIndex < students.length && nextColIndex < dynamicHeaders.length) {
+                const nextInput = document.getElementById(`${examIndex}-${nextRowIndex}-${nextColIndex}`);
+                nextInput.focus();
             }
         }
     };
 
+
     const handleMarkChange = (studentId, subjectId, value, exam) => {
         let isPass = value >= 50 ? "Pass" : "Fail";
 
-        // console.log(newMarks);
-        // Check if a mark for the given student and subject already exists
-        const existingMarkIndex = newMarks.findIndex(mark => mark.student === studentId && mark.subject === subjectId);
+        const existingMarkIndex = newMarks.findIndex(mark => mark.student === studentId && mark.subject === subjectId && mark.exam === exam);
 
         if (existingMarkIndex !== -1) {
-            // Update existing mark
             const updatedMarks = [...newMarks];
             updatedMarks[existingMarkIndex] = {
                 ...updatedMarks[existingMarkIndex],
@@ -75,7 +76,6 @@ export const MarkTable = ({
             };
             setNewMarks(updatedMarks);
         } else {
-            // Add new mark
             const newMark = {
                 student: studentId,
                 subject: subjectId,
@@ -86,6 +86,7 @@ export const MarkTable = ({
             setNewMarks([...newMarks, newMark]);
         }
     };
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const startIndex = (currentPage - 1) * enteries;
@@ -174,20 +175,21 @@ export const MarkTable = ({
                                             .map((subject, subjectIndex) => (
                                                 <td key={subjectIndex} className='border border-gray-300'>
                                                     {data.semesters[0].assignedFaculties.some(assignment => assignment.subjectId === subject._id && assignment.facultyId === user._id) ? (
-                                                        <input
-                                                            type='number'
-                                                            value={newMarks.find(mark => mark.student == row._id && mark.exam == exam && mark.subject === subject._id)?.score || ''}
-                                                            min={0}
-                                                            max={100}
-                                                            placeholder='Enter Mark'
-                                                            id={`${rowIndex}-${subjectIndex}`}
-                                                            className={`w-full h-8 bg-white font-manrope`}
-                                                            onChange={(e) => handleMarkChange(row._id, subject._id, e.target.value, exam)}
-                                                            onKeyDown={(e) => handleEnterKeyPress(e, rowIndex, subjectIndex)}
-                                                        />
+                                                        <>
+                                                            <input// Store input ref
+                                                                type='number'
+                                                                value={newMarks.find(mark => mark.student == row._id && mark.exam == exam && mark.subject === subject._id)?.score || ''}
+                                                                min={0}
+                                                                max={100}
+                                                                placeholder='Enter Mark'
+                                                                id={`${examIndex}-${rowIndex}-${subjectIndex}`}
+                                                                className={`w-full h-8 bg-white font-manrope`}
+                                                                onChange={(e) => handleMarkChange(row._id, subject._id, e.target.value, exam)}
+                                                                onKeyDown={(e) => handleEnterKeyPress(e, examIndex, rowIndex, subjectIndex)}
+                                                            />
+                                                        </>
                                                     ) : (
                                                         <input
-                                                            id={`${rowIndex}-${subjectIndex}`}
                                                             type='number'
                                                             value=''
                                                             min={0}
@@ -200,6 +202,7 @@ export const MarkTable = ({
                                                 </td>
                                             ))}
                                     </>
+
                                 ))}
                             </tr>
                         ))}

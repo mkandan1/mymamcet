@@ -20,6 +20,7 @@ export const Course = () => {
 
   useEffect(() => {
     CourseServices.getAllCourse().then((data) => {
+      console.log(data);
       setData(data.courses)
       setIsLoading(false)
     }).catch((err) => {

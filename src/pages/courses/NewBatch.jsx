@@ -88,6 +88,7 @@ export const NewBatch = () => {
         }
 
         const data = { batchName, academicYear, regulation, courseName, department, program, students };
+        console.log(data);
         await Batch.addBatch(data)
             .then((data) => dispatch(showNotification({ type: "success", message: data.message })))
             .catch((err) => {dispatch(showNotification({ type: "error", message: err.message })); setIsLoading(false)})
