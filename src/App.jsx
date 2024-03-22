@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <div className='w-screen h-screen grid grid-cols-12 grid-rows-12'>
         <Routes>
-          <Route path='/login' element={<Login />} />
+          <Route path='/' element={<Login />} />
         </Routes>
       </div>
     </BrowserRouter>
