@@ -7,7 +7,7 @@ export const InstitutionDetails = () => {
             <img className='w-full' src='https://www.mycamu.co.in/camu_attachment/get/61823908c3e5c6fcf0bfd264'/>
         </div>
         <div className='instution_description'>
-            <h2 className='uppercase text-lg text-t1'>M.A.M. College of Engineering & Engineering</h2>
+            <h2 className='uppercase text-lg text-center text-t1'>M.A.M. College of Engineering & Engineering</h2>
         </div>
     </div>
   )
