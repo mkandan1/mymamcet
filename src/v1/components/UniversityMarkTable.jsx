@@ -7,18 +7,17 @@ import { geneteratePassingYear } from '../services/passingYear';
 
 export const UniversityMarkTable = ({
     subjects,
-    data,
     students,
     setStudents,
+    setNewMarks,
+    newMarks,
+    batch,
     onViewRow,
     view,
     multipleChoice,
     height,
     selectedRows,
     handleToggleRow,
-    setNewMarks,
-    newMarks,
-    batch
 }) => {
     const [dynamicHeaders, setDynamicHeaders] = useState([]);
     const [enteries, setEnteries] = useState(10);
@@ -40,41 +39,41 @@ export const UniversityMarkTable = ({
     const user = useSelector((state) => (state.auth.user.user));
     const [passingYears, setPassingYears] = useState(geneteratePassingYear(batch));
 
-    const calculateGPA = (marks, studentId) => {
-        const totalCredits = subjects.reduce((total, subject) => total + subject.subjectCredit, 0);
-        let totalGradePoints = 0;
-        let totalCreditsEarned = 0;
+    // const calculateGPA = (marks, studentId) => {
+    //     const totalCredits = subjects.reduce((total, subject) => total + subject.subjectCredit, 0);
+    //     let totalGradePoints = 0;
+    //     let totalCreditsEarned = 0;
 
-        for (const mark of marks) {
-            const subject = subjects.find(subject => subject._id === mark.subject);
-            if (subject) {
-                totalGradePoints += mark.score * subject.subjectCredit;
-                totalCreditsEarned += subject.subjectCredit;
-            }
-        }
+    //     for (const mark of marks) {
+    //         const subject = subjects.find(subject => subject._id === mark.subject);
+    //         if (subject) {
+    //             totalGradePoints += mark.score * subject.subjectCredit;
+    //             totalCreditsEarned += subject.subjectCredit;
+    //         }
+    //     }
 
-        const gpa = totalGradePoints / totalCreditsEarned;
-        console.log(studentId);
-        return gpa
-    };
+    //     const gpa = totalGradePoints / totalCreditsEarned;
+    //     console.log(studentId);
+    //     return gpa
+    // };
 
-    const calculateCGPA = (allMarks) => {
-        const totalCredits = subjects.reduce((total, subject) => total + subject.subjectCredit, 0);
-        let totalGradePoints = 0;
-        let totalCreditsEarned = 0;
+    // const calculateCGPA = (allMarks) => {
+    //     const totalCredits = subjects.reduce((total, subject) => total + subject.subjectCredit, 0);
+    //     let totalGradePoints = 0;
+    //     let totalCreditsEarned = 0;
 
-        for (const marks of allMarks) {
-            for (const mark of marks) {
-                const subject = subjects.find(subject => subject._id === mark.subject);
-                if (subject) {
-                    totalGradePoints += mark.score * subject.subjectCredit;
-                    totalCreditsEarned += subject.subjectCredit;
-                }
-            }
-        }
+    //     for (const marks of allMarks) {
+    //         for (const mark of marks) {
+    //             const subject = subjects.find(subject => subject._id === mark.subject);
+    //             if (subject) {
+    //                 totalGradePoints += mark.score * subject.subjectCredit;
+    //                 totalCreditsEarned += subject.subjectCredit;
+    //             }
+    //         }
+    //     }
 
-        return totalGradePoints / totalCreditsEarned;
-    };
+    //     return totalGradePoints / totalCreditsEarned;
+    // };
 
     useEffect(() => {
         if (subjects.length > 0) {
@@ -120,7 +119,7 @@ export const UniversityMarkTable = ({
                 ...updatedMarks[existingMarkIndex],
                 score: value,
                 isPass: isPass,
-                passingYear: passingYear // Make sure passingYear is defined here
+                passingYear: passingYear
             };
             setNewMarks(updatedMarks);
         } else {
@@ -130,7 +129,7 @@ export const UniversityMarkTable = ({
                 score: value,
                 exam,
                 isPass: isPass,
-                passingYear: passingYear // Make sure passingYear is defined here
+                passingYear: passingYear
             };
             console.log(newMark);
             setNewMarks([...newMarks, newMark]);
@@ -148,8 +147,7 @@ export const UniversityMarkTable = ({
             };
             setNewMarks(updatedMarks);
         } else {
-            // If the mark doesn't exist yet, you can decide what to do in this case
-            // For example, you might want to ignore the change or add a new mark with this passing year
+            
         }
     };
 
@@ -162,9 +160,11 @@ export const UniversityMarkTable = ({
     const currentRows = students.slice(startIndex, endIndex);
     const totalPages = Math.ceil(students.length / enteries);
 
+    console.log(students);
+
     return (
         <>
-            <div className="w-full overflow-x-auto custom-scrollbar">
+            {/* <div className="w-full overflow-x-auto custom-scrollbar">
                 <div className='w-full flex justify-end mb-2'>
 
                 </div>
@@ -279,7 +279,7 @@ export const UniversityMarkTable = ({
                                     </>
                                 ))}
 
-                                <td className="border text-center"></td>
+                                <td className="border text-center">{row.semesterStats.find(stats => batch.semesters[0]._id === stats.semester)?.semesterArrears.length || 0}</td>
                                 <td className="border text-center"></td>
                                 <td className="border text-center"></td>
                                 <td className="border text-center"></td>
@@ -289,7 +289,7 @@ export const UniversityMarkTable = ({
                     </tbody>
                 </table>
             </div >
-            <PaginationControls currentPage={currentPage} totalPages={totalPages} setCurrentPage={(page) => setCurrentPage(page)} enteries={enteries} setEnteries={(num) => setEnteries(num)} />
+            <PaginationControls currentPage={currentPage} totalPages={totalPages} setCurrentPage={(page) => setCurrentPage(page)} enteries={enteries} setEnteries={(num) => setEnteries(num)} /> */}
         </>
     );
 };

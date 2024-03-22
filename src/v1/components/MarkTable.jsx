@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 export const MarkTable = ({
     subjects,
-    data,
+    batch,
     students,
     onViewRow,
     view,
@@ -174,7 +174,7 @@ export const MarkTable = ({
                                             .filter(header => header.type === 'Theory') // Filter out laboratory subjects
                                             .map((subject, subjectIndex) => (
                                                 <td key={subjectIndex} className='border border-gray-300'>
-                                                    {data.semesters[0].assignedFaculties.some(assignment => assignment.subjectId === subject._id && assignment.facultyId === user._id) ? (
+                                                    {batch.semesters[0].assignedFaculties.some(assignment => assignment.subjectId === subject._id && assignment.facultyId === user._id) ? (
                                                         <>
                                                             <input// Store input ref
                                                                 type='number'

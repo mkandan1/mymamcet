@@ -33,7 +33,7 @@ export const MarkAllocation = () => {
     const [view, setView] = useState();
     const [regulations, setRegulations] = useState([]);
     const [exams, setExams] = useState(['Internal Exam', 'University Exam'])
-    const [data, setData] = useState([]);
+    const [fetchedBatchData, setFetchedBatchData] = useState([]);
     const [newMarks, setNewMarks] = useState([]);
     const [alreadyEnteredMark, setAlreadyEnteredMark] = useState([])
     const [show, setShow] = useState(false);
@@ -107,7 +107,7 @@ export const MarkAllocation = () => {
                 const students = snapshot.batch.students;
                 const semester = snapshot.batch.semesters[0]
                 setStudents(students);
-                setData(batch);
+                setFetchedBatchData(batch);
                 setSubjects(subjectsArray);
                 setAlreadyEnteredMark(examScores);
                 setNewMarks(examScores);
@@ -117,8 +117,6 @@ export const MarkAllocation = () => {
             .catch((err) => {
                 dispatch(showNotification({ type: "error", message: err.message }))
             })
-
-        console.log(newMarks);
     }
 
     const handleUpdate = () => {
@@ -197,7 +195,7 @@ export const MarkAllocation = () => {
         console.log(filteredMarks);
 
         // Prepare data object with only new marks
-        const dataObject = { marks: filteredMarks, examId: data.exams[0]._id };
+        const dataObject = { marks: filteredMarks, examId: fetchedBatchData.exams[0]._id };
         // Send the new marks to the server for saving
         Exam.storeScores(dataObject)
             .then((result) => {
@@ -291,7 +289,7 @@ export const MarkAllocation = () => {
                         colStart={2}
                     />
                 </InputLayout>
-                <MarkAllocationPopup show={show} subjects={subjects} data={data} semester={semester} students={students} batch={batch} setStudents={setStudents} onUpdate={handleUpdate} newMarks={newMarks} setNewMarks={(mark) => setNewMarks(mark)} onViewRow={(id) => setView(id)} onClose={() => setShow(false)} onSave={() => handleSaveScore()} />
+                <MarkAllocationPopup show={show} subjects={subjects} semester={semester} students={students} batch={fetchedBatchData} setStudents={setStudents} onUpdate={handleUpdate} newMarks={newMarks} setNewMarks={(mark) => setNewMarks(mark)} onViewRow={(id) => setView(id)} onClose={() => setShow(false)} onSave={() => handleSaveScore()} />
                 <ButtonLayout marginTop={'0'}>
                     <Button bgColor={'blue-500'} textColor={'white'} text={'Get students'} icon={'ph:student-light'} onClick={() => handleGetStudentsAndSemester()} />
                     <Button bgColor={'green-500'} textColor={'white'} text={'Enter Marks'} icon={'uil:edit'} />

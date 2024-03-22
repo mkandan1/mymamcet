@@ -18,7 +18,23 @@
     --white: #ffff;
     --black: #000;
 }
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: var(--font-manrope);
+    line-height: 1.42857143;
+}
 
+.more-login_label {
+    line-height: 0.1em;
+}
+
+
+/* Version 1 */
+/* 
 body {
     overflow-y: hidden !important;
     overflow-x: hidden;
@@ -52,10 +68,8 @@ label {
 
 input {
     display: block;
-    /* width: 400px; */
     height: 42px;
     background-color: var(--lightest-dark);
-    /* border: 2px solid var(--light-dark); */
     outline: none;
     color: var(--dark) !important;
     padding-left: 14px !important;
@@ -69,17 +83,6 @@ input[type="checkbox"] {
     border: 2px solid var(--light-dark);
 } 
 
-
-/* a {
-    color: var(--primary-color) !important;
-    font-family: var(--font-sen) !important;
-    font-weight: var(--font-normal) !important;
-    letter-spacing: var(--letter-spacing--1);
-} */
-
-/* a:hover {
-    text-decoration: none;
-} */
 
 .loading {
     background-color:#7AA2FF !important;
@@ -103,4 +106,4 @@ h2 {
     font-family: var(--font-manrope);
     font-weight: var(--font-bold) !important;
     color: var(--dark);
-}
+} */
