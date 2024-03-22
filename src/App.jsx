@@ -10,18 +10,20 @@ import { hideTopBarLoading, showTopBarLoading } from './v2/constant/LoadingIndic
 import { useDispatch } from 'react-redux';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('mamcet_auth') || false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [isCheckingAuthCompleted, setIsCheckingAuthCompleted] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     showTopBarLoading(dispatch)
+    localStorage.getItem('mamcet_auth') ? setIsLoggedIn(true) : setIsLoggedIn(false);
+
     Auth.Authorization()
       .then(status => {
         setIsLoggedIn(true);
       })
       .catch(err => {
-        console.log(err)
+        console.log(location.pathname);
         localStorage.removeItem('mamcet_auth')
         setIsLoggedIn(false);
       })
@@ -31,9 +33,10 @@ function App() {
       })
   })
 
-  if(!isCheckingAuthCompleted){
+  if (!isCheckingAuthCompleted) {
     return
   }
+
   return (
     <BrowserRouter>
       <div className='w-screen h-screen grid grid-cols-12 grid-rows-12'>
@@ -45,8 +48,6 @@ function App() {
             <Route path='/login' element={<Login />} />
           </Routes> :
           <Routes>
-            <Route path='/' element={<Login />} />
-            <Route path='/login' element={<Login />} />
             <Route path='/*' element={<Login />} />
           </Routes>
         }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '../Input/Input';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button/Button';
@@ -18,9 +18,10 @@ export const LoginForm = () => {
     const [loginFailedError, setloginFailedError] = useState({ show: false, message: null })
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const cout = useState(0);
 
     const handleLogin = async () => {
-        setloginFailedError({show: false, message: ''})
+        setloginFailedError({ show: false, message: '' })
         setLoginInputError({ show: false, id: 'email', message: '' })
         setLoginInputError({ show: false, id: 'password', message: '' })
 
@@ -52,16 +53,17 @@ export const LoginForm = () => {
 
         await Auth.loginWithEmailAndPassword(userCredentials.email, userCredentials.password)
             .then((status) => {
-                navigate('/web')
+                location.pathname = '/web'
             })
             .catch((err) => {
                 console.log(err);
-                setloginFailedError({show: true, message: err.message})
+                setloginFailedError({ show: true, message: err.message })
             })
-            .finally(()=> {
+            .finally(() => {
                 hide2LoadingBars(dispatch)
             })
     }
+
     return (
         <div className='flex justify-center mt-6'>
             <div className='w-full md:w-[45%]'>
