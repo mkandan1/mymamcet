@@ -32,6 +32,42 @@ body {
     line-height: 0.1em;
 }
 
+.top-bar-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Background color of top bar */
+    z-index: 9999; /* Ensure it's above other content */
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 0;
+    background-color: #0D9BE1; /* Color of the spinner */
+    animation: top-bar-spinner 2.3s linear infinite; /* Adjust animation duration and timing function */
+}
+
+@keyframes top-bar-spinner {
+    0% {
+        width: 100%;
+    }
+    50% {
+        width: 2%; 
+    }
+    100% {
+        width: 100%; /* Collapse back to 0 */
+        left: 50%; /* Move back to center horizontally */
+        transform: translateX(-60%); /* Center horizontally */
+    }
+}
+
+
 
 /* Version 1 */
 /* 

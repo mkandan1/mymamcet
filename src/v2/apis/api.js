@@ -1,5 +1,5 @@
 import axios from "axios";
-import { encryptData } from "../../services/encrypt-decrypt";
+import { encryptData } from "../services/encrypt-decrypt";
 
 axios.defaults.withCredentials = true
 export class API {

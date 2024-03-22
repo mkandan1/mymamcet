@@ -1,4 +1,5 @@
 import React from 'react';
+import { FullScreenLoading } from './Loading/FullScreenLoading';
 
 export const Container = ({ width, height, cols, rows, colSpan, rowSpan, rowStart, colStart, children }) => {
   return (
