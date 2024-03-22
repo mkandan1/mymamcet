@@ -11,6 +11,7 @@ export const MarkAllocationPopup = ({ rows, cols, onUpdate, subjects, semester, 
       const studentMarks = newMarks.filter(mark => mark.student === student._id)
       let totalGradePoints = 0;
       let totalCreditsEarned = 0;
+      console.log(studentMarks);
       const studentPreviousSemesterStats = student.semesterStats;
       const semesterArrears = studentPreviousSemesterStats?.semesterArrears || [];
 
@@ -22,8 +23,9 @@ export const MarkAllocationPopup = ({ rows, cols, onUpdate, subjects, semester, 
           if (mark.score == '0') {
             semesterArrears.push(mark.subject)
           }
-          else if(semesterArrears.filter(arrear => mark.subject == arrear)){
-
+          else if (semesterArrears.includes(mark.subject)) {
+            const index = semesterArrears.indexOf(mark.subject);
+            semesterArrears.splice(index, 1);
           }
         }
       }
@@ -36,8 +38,14 @@ export const MarkAllocationPopup = ({ rows, cols, onUpdate, subjects, semester, 
         cgpa: gpa,
         semesterArrears,
       }
-      console.log("Student: ", newStats);
+      if (Array.isArray(student.semesterStats)) {
+        student.semesterStats = [...student.semesterStats, newStats];
+      } else {
+        student.semesterStats = [newStats];
+      }
     })
+
+    console.log(students);
 
   };
 
@@ -47,14 +55,14 @@ export const MarkAllocationPopup = ({ rows, cols, onUpdate, subjects, semester, 
   };
 
   return (
-    <Model title={'Allocate Marks to Students'} subtitles={batch} rows={rows} cols={cols} show={show} onClose={onClose}>
-      {batch.exam == 'Internal Exam' ? (
+    <Model title={'Allocate Marks to Students'} batch={batch} rows={rows} cols={cols} show={show} onClose={onClose}>
+      {/* {batch.exam == 'Internal Exam' ? (
         <>
           {show && subjects && students && (
             <>
               <MarkTable
                 subjects={subjects}
-                data={data}
+                batch={batch}
                 students={students}
                 onViewRow={onViewRow}
                 newMarks={newMarks}
@@ -71,24 +79,24 @@ export const MarkAllocationPopup = ({ rows, cols, onUpdate, subjects, semester, 
         <>
           <UniversityMarkTable
             subjects={subjects}
-            data={data}
+            batch={batch}
             students={students}
+            newMarks={newMarks}
             setStudents={setStudents}
             onViewRow={onViewRow}
-            newMarks={newMarks}
             setNewMarks={setNewMarks}
             batch={batch}
           />
           <ButtonLayout>
             <Button bgColor={'green-500'} textColor={'white'} text={'Save Scores'} icon={'bx:save'} onClick={onSave} />
             <Button bgColor={'green-500'} textColor={'white'} text={'Update Scores'} icon={'bx:save'} onClick={onUpdate} />
-            {batch.exam === 'University Exam' && (<Button bgColor={'green-500'} textColor={'white'} text={'Calculate GPA & CGPA'} icon={'bx:save'} onClick={handleCalculate} />)}
+            {batch.exam === 'University Exam' && (<Button bgColor={'green-500'} textColor={'white'} text={'Calculate GPA & CGPA'} icon={'bx:save'} onClick={() => handleCalculate()} />)}
             <Button bgColor={'white'} textColor={'gray-400'} text={'Close'} icon={'ic:outline-cancel'} onClick={onClose} />
           </ButtonLayout>
         </>
       )
 
-      }
+      } */}
     </Model>
   )
 }
