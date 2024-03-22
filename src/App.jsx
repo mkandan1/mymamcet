@@ -10,7 +10,7 @@ import { hideTopBarLoading, showTopBarLoading } from './v2/constant/LoadingIndic
 import { useDispatch } from 'react-redux';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('mamcet_auth') || false);
   const [isCheckingAuthCompleted, setIsCheckingAuthCompleted] = useState(false);
   const dispatch = useDispatch();
 
@@ -22,6 +22,7 @@ function App() {
       })
       .catch(err => {
         console.log(err)
+        localStorage.removeItem('mamcet_auth')
         setIsLoggedIn(false);
       })
       .finally(() => {
@@ -39,10 +40,9 @@ function App() {
         <TopBarLoading />
         {isLoggedIn ?
           <Routes>
-            <Route path='/' element={<Login />} />
+            <Route path='/' element={<Dashboard />} />
             <Route path='/web' element={<Dashboard />} />
             <Route path='/login' element={<Login />} />
-            <Route path='/#/' element={<Login />} />
           </Routes> :
           <Routes>
             <Route path='/' element={<Login />} />

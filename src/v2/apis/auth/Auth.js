@@ -7,6 +7,7 @@ class Auth {
             try {
                 const result = await API.postRequest('/auth/login', { email, password });
                 if (result.success) {
+                    localStorage.setItem('mamcet_auth', true);
                     resolve(result)
                 }
                 else {
@@ -14,6 +15,7 @@ class Auth {
                 }
             }
             catch (err) {
+                console.log(err.response);
                 reject(err.response.data)
             }
         })
