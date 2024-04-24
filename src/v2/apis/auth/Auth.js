@@ -1,4 +1,5 @@
 import { API } from "../api"
+import { StoreUser } from '../../redux/action/UserActions'
 
 class Auth {
 
@@ -21,11 +22,12 @@ class Auth {
         })
     }
 
-    static Authorization = () => {
+    static Authorization = (dispatch) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const result = await API.getRequest('/auth/user-state')
                 if (result.success) {
+                    dispatch(StoreUser(result.user))
                     resolve(result)
                 }
                 else {

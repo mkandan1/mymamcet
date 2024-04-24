@@ -18,7 +18,7 @@ function App() {
     showTopBarLoading(dispatch)
     localStorage.getItem('mamcet_auth') ? setIsLoggedIn(true) : setIsLoggedIn(false);
 
-    Auth.Authorization()
+    Auth.Authorization(dispatch)
       .then(status => {
         setIsLoggedIn(true);
       })
@@ -39,13 +39,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className='w-screen h-screen grid grid-cols-12 grid-rows-12'>
+      <div className='w-screen h-screen'>
         <TopBarLoading />
         {isLoggedIn ?
           <Routes>
             <Route path='/' element={<Dashboard />} />
-            <Route path='/web' element={<Dashboard />} />
-            <Route path='/login' element={<Login />} />
+            <Route path='/courses' element={<Dashboard />} />
+            <Route path='/subjects' element={<Login />} />
           </Routes> :
           <Routes>
             <Route path='/*' element={<Login />} />
