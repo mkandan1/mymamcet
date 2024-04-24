@@ -53,7 +53,7 @@ export const LoginForm = () => {
 
         await Auth.loginWithEmailAndPassword(userCredentials.email, userCredentials.password)
             .then((status) => {
-                location.pathname = '/web'
+                location.pathname = '/'
             })
             .catch((err) => {
                 console.log(err);

@@ -31,7 +31,7 @@ function App() {
         hideTopBarLoading(dispatch)
         setIsCheckingAuthCompleted(true)
       })
-  })
+  }, [])
 
   if (!isCheckingAuthCompleted) {
     return
